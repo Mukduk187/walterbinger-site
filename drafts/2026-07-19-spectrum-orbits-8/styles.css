@@ -1,0 +1,1723 @@
+:root {
+  --paper: #fbf7ef;
+  --paper-deep: #eee3d4;
+  --ink: #201f1b;
+  --graphite: #686158;
+  --night: #0d1020;
+  --night-ink: #f8f2e8;
+  --magenta: #cf1975;
+  --sky: #72c9f4;
+  --yellow: #f2c94c;
+  --green: #31b96f;
+  --violet: #a98ef6;
+  --museum: #f257a5;
+  --active-color: var(--magenta);
+  --spectral-a: rgba(32, 31, 27, 0);
+  --spectral-b: rgba(32, 31, 27, 0);
+  --spectral-c: rgba(32, 31, 27, 0);
+  --sans: "Avenir Next", Avenir, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --hand: "Bradley Hand", "Segoe Print", "Marker Felt", cursive;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  letter-spacing: 0;
+}
+
+body,
+.page-shell {
+  background:
+    linear-gradient(90deg, rgba(32, 31, 27, 0.026) 1px, transparent 1px),
+    linear-gradient(rgba(32, 31, 27, 0.02) 1px, transparent 1px),
+    var(--paper);
+  background-size: 44px 44px, 44px 44px, auto;
+}
+
+button {
+  color: inherit;
+  font: inherit;
+  letter-spacing: 0;
+}
+
+.skip-link {
+  position: fixed;
+  left: 16px;
+  top: -50px;
+  z-index: 20;
+  padding: 10px 12px;
+  border: 1.5px solid currentColor;
+  border-radius: 6px;
+  background: var(--paper);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+.page-shell {
+  position: relative;
+  width: 100vw;
+  height: 100svh;
+  min-height: 620px;
+  isolation: isolate;
+  transition: color 420ms ease, background-color 420ms ease;
+}
+
+.page-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 11% 18%, rgba(248, 242, 232, 0.8) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 29% 63%, rgba(114, 201, 244, 0.58) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 54% 24%, rgba(242, 201, 76, 0.7) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 73% 71%, rgba(242, 87, 165, 0.66) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 88% 34%, rgba(99, 201, 136, 0.6) 0 1px, transparent 1.6px),
+    linear-gradient(126deg, #0d1020 0%, #171028 43%, #0a1626 100%);
+  background-size: 180px 180px, 230px 230px, 260px 260px, 210px 210px, 190px 190px, auto;
+  transition: opacity 420ms ease;
+}
+
+.page-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.3;
+  background:
+    linear-gradient(112deg, transparent 0 26%, rgba(32, 31, 27, 0.035) 26% 26.4%, transparent 26.4% 100%),
+    linear-gradient(78deg, transparent 0 61%, rgba(32, 31, 27, 0.028) 61% 61.3%, transparent 61.3% 100%);
+}
+
+body.has-discovery .page-shell,
+body.is-world .page-shell {
+  color: var(--night-ink);
+}
+
+body.has-discovery .page-shell::before,
+body.is-world .page-shell::before {
+  opacity: 1;
+}
+
+body.has-discovery .page-shell::after,
+body.is-world .page-shell::after {
+  opacity: 0.08;
+}
+
+.brand-script {
+  position: fixed;
+  left: clamp(22px, 4vw, 54px);
+  top: clamp(18px, 3vw, 42px);
+  z-index: 8;
+  margin: 0;
+  color: rgba(32, 31, 27, 0.86);
+  font-family: var(--hand);
+  font-size: clamp(22px, 2.6vw, 34px);
+  font-weight: 700;
+  line-height: 1;
+  transform: rotate(-3deg);
+  transition: color 360ms ease, text-shadow 360ms ease;
+}
+
+body.has-discovery .brand-script,
+body.is-world .brand-script {
+  color: rgba(248, 242, 232, 0.88);
+  text-shadow: 0 0 16px rgba(248, 242, 232, 0.16);
+}
+
+.lens-panel {
+  position: fixed;
+  right: clamp(16px, 3vw, 42px);
+  top: clamp(16px, 3vw, 38px);
+  z-index: 9;
+  display: grid;
+  gap: 7px;
+  justify-items: end;
+}
+
+.lens-panel p {
+  margin: 0;
+  color: rgba(32, 31, 27, 0.62);
+  font-family: var(--hand);
+  font-size: 16px;
+  line-height: 1;
+  transition: color 360ms ease;
+}
+
+body.has-discovery .lens-panel p,
+body.is-world .lens-panel p {
+  color: rgba(248, 242, 232, 0.68);
+}
+
+.lens-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: end;
+  max-width: min(560px, calc(100vw - 32px));
+}
+
+.lens-button {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1.5px solid rgba(32, 31, 27, 0.45);
+  border-radius: 6px;
+  background: rgba(251, 247, 239, 0.72);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1;
+  transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease, color 160ms ease;
+}
+
+.lens-button:hover,
+.lens-button:focus-visible,
+.lens-button.is-active {
+  border-color: var(--lens-color, var(--magenta));
+  background: color-mix(in srgb, var(--lens-color, var(--magenta)) 16%, rgba(251, 247, 239, 0.84));
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--lens-color, var(--magenta)) 34%, transparent);
+  outline: none;
+  transform: translate(-1px, -1px);
+}
+
+body.has-discovery .lens-button,
+body.is-world .lens-button {
+  border-color: rgba(248, 242, 232, 0.34);
+  background: rgba(13, 16, 32, 0.68);
+  color: rgba(248, 242, 232, 0.82);
+}
+
+body.has-discovery .lens-button.is-active,
+body.is-world .lens-button.is-active,
+body.has-discovery .lens-button:hover,
+body.is-world .lens-button:hover,
+body.has-discovery .lens-button:focus-visible,
+body.is-world .lens-button:focus-visible {
+  border-color: var(--lens-color, var(--magenta));
+  background: color-mix(in srgb, var(--lens-color, var(--magenta)) 22%, rgba(13, 16, 32, 0.82));
+  color: #fffdf7;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transition: transform 620ms cubic-bezier(0.18, 0.75, 0.16, 1), filter 620ms ease, opacity 620ms ease;
+  transform-origin: var(--jump-x, 50%) var(--jump-y, 50%);
+}
+
+body.is-jumping .stage {
+  transform: scale(3.18) rotate(0.7deg);
+  filter: blur(9px) saturate(1.42);
+  opacity: 0.62;
+}
+
+body.is-arriving .stage {
+  animation: arrivalSettle 520ms cubic-bezier(0.18, 0.74, 0.2, 1);
+}
+
+.jump-tunnel {
+  position: fixed;
+  inset: 0;
+  z-index: 11;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.78);
+  transform-origin: var(--jump-x, 50%) var(--jump-y, 50%);
+  background:
+    radial-gradient(circle at var(--jump-x, 50%) var(--jump-y, 50%), transparent 0 9%, color-mix(in srgb, var(--jump-color, var(--active-color)) 18%, transparent) 9.4% 10%, transparent 10.5% 15%),
+    repeating-radial-gradient(circle at var(--jump-x, 50%) var(--jump-y, 50%), transparent 0 28px, rgba(32, 31, 27, 0.17) 30px 32px);
+  mix-blend-mode: multiply;
+}
+
+body.is-jumping .jump-tunnel {
+  opacity: 1;
+  animation: tunnelRush 720ms cubic-bezier(0.16, 0.8, 0.16, 1) forwards;
+}
+
+body.is-jumping .world-panel,
+body.is-jumping .artifact-dock {
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.is-jumping .brand-script,
+body.is-jumping .lens-panel {
+  opacity: 0.3;
+}
+
+body.is-world .stage {
+  opacity: 0.54;
+  filter: saturate(1.08);
+}
+
+.star-map {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.star-hit {
+  color: var(--ink);
+  cursor: pointer;
+  outline: none;
+}
+
+.star-hit circle.hotspot {
+  fill: transparent;
+  pointer-events: all;
+}
+
+.spectral-aura {
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.82);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.18, 0.74, 0.2, 1);
+}
+
+.spectral-ring {
+  fill: none;
+  stroke: var(--ring-color, transparent);
+  stroke-width: var(--ring-width, 2px);
+  stroke-dasharray: 2 7;
+  opacity: var(--ring-opacity, 0);
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(var(--ring-turn, 0deg));
+}
+
+body.has-spectrum .star-hit.is-spectral .spectral-aura {
+  opacity: var(--spectrum-opacity, 0.4);
+  transform: scale(var(--spectrum-scale, 1));
+  filter: var(--spectrum-glow, none);
+}
+
+.star-mark {
+  color: var(--ink);
+  opacity: 0.42;
+  pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 180ms ease, transform 180ms ease, filter 180ms ease;
+}
+
+.star-spark {
+  fill: color-mix(in srgb, currentColor 78%, transparent);
+  stroke: currentColor;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+
+.star-ray {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.8;
+  opacity: 0.52;
+}
+
+.star-core {
+  fill: var(--ink);
+  opacity: 0.8;
+  transition: fill 180ms ease, opacity 180ms ease, r 180ms ease, filter 180ms ease;
+}
+
+body.has-discovery .star-core,
+body.is-world .star-core {
+  fill: rgba(248, 242, 232, 0.86);
+  filter: drop-shadow(0 0 5px rgba(248, 242, 232, 0.28));
+}
+
+.star-hit.is-hover .star-core,
+.star-hit:focus-visible .star-core,
+.star-hit.is-active .star-core,
+.star-hit.is-pinned .star-core,
+.star-hit.is-related .star-core {
+  fill: var(--ink);
+  opacity: 1;
+  r: 3.8;
+  filter: drop-shadow(0 0 5px rgba(32, 31, 27, 0.3));
+}
+
+body.has-spectrum .star-hit.is-spectral .star-core {
+  filter: var(--spectrum-glow, none);
+}
+
+.star-glyph {
+  color: var(--ink);
+  opacity: 0.68;
+  transform: scale(0.26);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 190ms ease, transform 260ms cubic-bezier(0.22, 0.62, 0.2, 1), filter 190ms ease;
+}
+
+body.has-discovery .star-glyph,
+body.is-world .star-glyph {
+  opacity: 0.48;
+  transform: scale(0.3);
+}
+
+.star-hit.is-hover .star-glyph,
+.star-hit:focus-visible .star-glyph,
+.star-hit.is-active .star-glyph,
+.star-hit.is-pinned .star-glyph {
+  opacity: 0.98;
+  transform: scale(0.94) rotate(-2deg);
+  filter: drop-shadow(0 0 4px rgba(251, 247, 239, 0.82));
+}
+
+.star-hit.is-related .star-glyph {
+  opacity: 0.76;
+  transform: scale(0.46) rotate(2deg);
+}
+
+.star-hit.is-observed .star-glyph,
+.star-hit.is-active .star-glyph,
+.star-hit.is-pinned .star-glyph {
+  opacity: 0.98;
+  transform: scale(0.94) rotate(-2deg);
+}
+
+.star-hit.is-hover .star-mark,
+.star-hit:focus-visible .star-mark,
+.star-hit.is-active .star-mark,
+.star-hit.is-pinned .star-mark,
+.star-hit.is-related .star-mark {
+  transform: scale(1.14) rotate(-5deg);
+  filter: drop-shadow(0 0 9px color-mix(in srgb, currentColor 56%, transparent));
+}
+
+body.is-world .star-hit.is-local-origin .star-core {
+  fill: var(--ink);
+  opacity: 1;
+  r: 6.6;
+  filter: drop-shadow(0 0 8px rgba(32, 31, 27, 0.32));
+}
+
+body.is-world .star-hit.is-local-near .star-core {
+  opacity: 0.86;
+}
+
+body.is-world .star-hit.is-local-middle .star-core {
+  opacity: 0.56;
+}
+
+body.is-world .star-hit.is-local-far .star-core {
+  opacity: 0.24;
+}
+
+body.is-world .star-hit.is-local-origin .star-glyph {
+  opacity: 0.95;
+  transform: scale(0.9) rotate(-2deg);
+}
+
+body.is-world .star-hit.is-local-origin .star-mark {
+  transform: scale(1.28) rotate(-5deg);
+  filter: drop-shadow(0 0 8px rgba(32, 31, 27, 0.28));
+}
+
+body.is-world .star-hit.is-local-near .star-glyph {
+  opacity: 0.42;
+  transform: scale(0.42) rotate(2deg);
+}
+
+body.is-world .star-hit.is-local-middle .star-glyph {
+  opacity: 0.24;
+  transform: scale(0.34);
+}
+
+body.is-world .star-hit.is-local-far .star-glyph {
+  opacity: 0.08;
+  transform: scale(0.28);
+}
+
+body.is-world .star-hit.is-local-far .star-mark {
+  opacity: 0.34;
+  transform: scale(0.72);
+}
+
+.glyph-line,
+.glyph-detail,
+.glyph-accent,
+.motion-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.glyph-line {
+  stroke-width: 4.2;
+}
+
+.glyph-detail {
+  stroke-width: 2.4;
+  opacity: 0.8;
+}
+
+.glyph-accent {
+  stroke-width: 4.6;
+  opacity: 0.95;
+}
+
+.motion-line {
+  stroke-width: 3;
+  opacity: 0.74;
+}
+
+.glyph-dot {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.4;
+}
+
+.glyph-fill-dot {
+  fill: currentColor;
+}
+
+.constellation-picture {
+  color: var(--lens-color, var(--active-color));
+  opacity: 0;
+  pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: constellationIn 420ms ease forwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+.relation-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+  stroke-dasharray: 3 9;
+  opacity: 0.18;
+  animation: crawl 22s linear infinite;
+}
+
+.constellation-outline {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+  opacity: 0.42;
+  paint-order: stroke;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, currentColor 68%, transparent));
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: draw 760ms cubic-bezier(0.18, 0.74, 0.2, 1) forwards;
+}
+
+.constellation-node,
+.constellation-drawn-node {
+  fill: currentColor;
+  filter: drop-shadow(0 0 7px color-mix(in srgb, currentColor 74%, transparent));
+}
+
+.constellation-node {
+  opacity: 0.56;
+}
+
+.constellation-drawn-node {
+  opacity: 0.36;
+}
+
+.constellation-label {
+  fill: currentColor;
+  font-family: var(--hand);
+  font-size: 26px;
+  font-weight: 700;
+  opacity: 0.9;
+  paint-order: stroke;
+  stroke: rgba(13, 16, 32, 0.78);
+  stroke-width: 5px;
+}
+
+.flash {
+  color: var(--ink);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 190ms ease, filter 190ms ease;
+}
+
+.flash.is-visible {
+  opacity: 0.74;
+}
+
+.flash.is-primary {
+  opacity: 1;
+  filter: drop-shadow(0 0 8px rgba(251, 247, 239, 0.82));
+}
+
+.flash.is-related {
+  opacity: 0.48;
+}
+
+.flash-label {
+  fill: rgba(248, 242, 232, 0.92);
+  font-family: var(--hand);
+  font-size: 29px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: rgba(13, 16, 32, 0.78);
+  stroke-width: 5px;
+}
+
+body:not(.has-discovery):not(.is-world) .flash-label {
+  fill: rgba(32, 31, 27, 0.88);
+  stroke: rgba(251, 247, 239, 0.76);
+}
+
+.discovery-note {
+  position: fixed;
+  left: clamp(18px, 4vw, 54px);
+  bottom: clamp(18px, 4vw, 48px);
+  z-index: 9;
+  max-width: min(340px, calc(100vw - 36px));
+  padding-left: 10px;
+  border-left: 2px solid rgba(207, 25, 117, 0.2);
+  color: rgba(32, 31, 27, 0.74);
+  opacity: 0.42;
+  pointer-events: none;
+  transition: opacity 180ms ease, border-color 180ms ease, color 180ms ease, bottom 220ms ease;
+}
+
+body.has-discovery .discovery-note {
+  border-left-color: var(--active-color);
+  color: rgba(248, 242, 232, 0.78);
+  opacity: 1;
+}
+
+body.has-artifacts .discovery-note {
+  bottom: clamp(184px, 22vh, 226px);
+}
+
+body.is-world .discovery-note {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.discovery-note p {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--hand);
+  font-size: clamp(18px, 2.4vw, 25px);
+  font-weight: 700;
+  line-height: 1;
+  transition: color 180ms ease;
+}
+
+body.has-discovery .discovery-note p {
+  color: #fffdf7;
+}
+
+.discovery-note span {
+  display: block;
+  margin-top: 5px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.discovery-note span:empty {
+  display: none;
+}
+
+.note-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  pointer-events: auto;
+}
+
+.note-button,
+.artifact-go,
+.world-back {
+  min-height: 34px;
+  border: 1.5px solid currentColor;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: lowercase;
+}
+
+.note-button {
+  min-width: 54px;
+  padding: 0 12px;
+}
+
+.note-button:disabled {
+  cursor: default;
+  opacity: 0.34;
+}
+
+.note-button:not(:disabled):hover,
+.note-button:not(:disabled):focus-visible,
+.artifact-go:hover,
+.artifact-go:focus-visible,
+.world-back:hover,
+.world-back:focus-visible {
+  outline: none;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 color-mix(in srgb, currentColor 24%, transparent);
+}
+
+.artifact-dock {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(12px, 2.2vh, 22px);
+  z-index: 10;
+  display: grid;
+  grid-template-columns: minmax(240px, 370px) minmax(340px, 560px);
+  gap: 12px;
+  width: min(940px, calc(100vw - 28px));
+  color: rgba(248, 242, 232, 0.92);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(calc(100% + 20px));
+  transition: opacity 240ms ease, transform 260ms cubic-bezier(0.18, 0.74, 0.2, 1);
+}
+
+.artifact-dock.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+body.is-world .artifact-dock {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(calc(100% + 20px));
+}
+
+.artifact-preview {
+  display: grid;
+  grid-template-columns: 82px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 112px;
+  padding: 10px;
+  border: 1.5px solid rgba(248, 242, 232, 0.28);
+  border-radius: 8px;
+  background: rgba(13, 16, 32, 0.76);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(12px);
+}
+
+.artifact-preview[hidden] {
+  display: none;
+}
+
+.artifact-preview img {
+  width: 82px;
+  height: 92px;
+  border-radius: 5px;
+  object-fit: cover;
+  background: rgba(248, 242, 232, 0.08);
+}
+
+.artifact-copy {
+  min-width: 0;
+}
+
+.artifact-copy p {
+  margin: 0;
+  font-family: var(--hand);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.artifact-copy span {
+  display: block;
+  margin-top: 5px;
+  color: rgba(248, 242, 232, 0.72);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.artifact-go {
+  align-self: end;
+  min-width: 44px;
+  padding: 0 10px;
+}
+
+.artifact-carousel {
+  display: flex;
+  gap: 9px;
+  align-items: stretch;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 4px 2px 8px;
+  scrollbar-color: rgba(248, 242, 232, 0.28) transparent;
+}
+
+.artifact-card {
+  flex: 0 0 112px;
+  display: grid;
+  grid-template-rows: 82px auto;
+  gap: 7px;
+  padding: 7px;
+  border: 1.5px solid rgba(248, 242, 232, 0.24);
+  border-radius: 8px;
+  background: rgba(13, 16, 32, 0.64);
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.artifact-card:hover,
+.artifact-card:focus-visible,
+.artifact-card.is-selected {
+  border-color: var(--active-color);
+  outline: none;
+  box-shadow: 0 0 0 1px var(--active-color), 4px 4px 0 color-mix(in srgb, var(--active-color) 28%, transparent);
+}
+
+.artifact-card img {
+  width: 100%;
+  height: 82px;
+  border-radius: 5px;
+  object-fit: cover;
+  background: rgba(248, 242, 232, 0.08);
+}
+
+.artifact-card span {
+  min-width: 0;
+  overflow: hidden;
+  color: rgba(248, 242, 232, 0.84);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.world-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 360ms ease;
+}
+
+body.is-world .world-panel {
+  opacity: 1;
+}
+
+.world-back {
+  position: fixed;
+  left: clamp(18px, 4vw, 54px);
+  top: clamp(68px, 8vh, 92px);
+  z-index: 12;
+  min-width: 54px;
+  padding: 0 12px;
+  color: rgba(248, 242, 232, 0.84);
+  pointer-events: auto;
+}
+
+.world-copy {
+  position: fixed;
+  left: clamp(22px, 5vw, 80px);
+  top: clamp(126px, 21vh, 192px);
+  z-index: 8;
+  width: min(420px, calc(100vw - 44px));
+  color: #fffdf7;
+  pointer-events: auto;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.76);
+}
+
+.world-copy p {
+  margin: 0;
+}
+
+.world-copy [data-world-kicker] {
+  color: color-mix(in srgb, var(--active-color) 76%, #fff 24%);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: lowercase;
+}
+
+.world-copy h2 {
+  margin: 2px 0 8px;
+  font-family: var(--hand);
+  font-size: clamp(38px, 7vw, 76px);
+  font-weight: 700;
+  line-height: 0.9;
+  text-shadow: 0 0 18px color-mix(in srgb, var(--active-color) 22%, transparent), 0 3px 24px rgba(0, 0, 0, 0.82);
+}
+
+.world-copy [data-world-note] {
+  max-width: 34rem;
+  color: rgba(248, 242, 232, 0.86);
+  font-size: clamp(14px, 1.4vw, 17px);
+  line-height: 1.48;
+}
+
+.world-feature {
+  position: fixed;
+  right: clamp(16px, 5vw, 74px);
+  bottom: clamp(148px, 21vh, 214px);
+  z-index: 8;
+  width: min(320px, 34vw);
+  margin: 0;
+  pointer-events: auto;
+}
+
+.world-feature[hidden] {
+  display: none;
+}
+
+.world-feature img {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  border: 1.5px solid rgba(248, 242, 232, 0.32);
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.36);
+}
+
+.world-feature figcaption {
+  margin-top: 8px;
+  color: rgba(248, 242, 232, 0.7);
+  font-family: var(--hand);
+  font-size: 17px;
+  text-align: right;
+}
+
+.scene-graphic {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 7;
+  height: min(28svh, 230px);
+  color: var(--active-color);
+  opacity: 0.44;
+  pointer-events: none;
+}
+
+.scene-graphic svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.scene-graphic path,
+.scene-graphic circle {
+  stroke-width: 3.2;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, currentColor 46%, transparent));
+}
+
+body.has-discovery .page-shell,
+body.is-world .page-shell {
+  color: var(--ink);
+}
+
+body.has-discovery .page-shell::before,
+body.is-world .page-shell::before {
+  opacity: 0;
+}
+
+body.has-discovery .page-shell::after,
+body.is-world .page-shell::after {
+  opacity: 0.3;
+}
+
+body.has-discovery .brand-script,
+body.is-world .brand-script {
+  color: rgba(32, 31, 27, 0.88);
+  text-shadow: none;
+}
+
+body.has-discovery .lens-panel p,
+body.is-world .lens-panel p {
+  color: rgba(32, 31, 27, 0.62);
+}
+
+body.has-discovery .lens-button,
+body.is-world .lens-button {
+  border-color: rgba(32, 31, 27, 0.42);
+  background: rgba(251, 247, 239, 0.78);
+  color: var(--ink);
+}
+
+body.has-discovery .lens-button.is-active,
+body.is-world .lens-button.is-active,
+body.has-discovery .lens-button:hover,
+body.is-world .lens-button:hover,
+body.has-discovery .lens-button:focus-visible,
+body.is-world .lens-button:focus-visible {
+  border-color: var(--lens-color, var(--magenta));
+  background: color-mix(in srgb, var(--lens-color, var(--magenta)) 16%, rgba(251, 247, 239, 0.9));
+  color: var(--ink);
+}
+
+body.has-discovery .star-core,
+body.is-world .star-core {
+  fill: rgba(32, 31, 27, 0.82);
+  filter: none;
+}
+
+body.is-world .stage {
+  opacity: 0.72;
+  filter: saturate(1.08);
+}
+
+body.has-discovery .discovery-note {
+  color: rgba(32, 31, 27, 0.78);
+}
+
+body.has-discovery .discovery-note p {
+  color: var(--ink);
+}
+
+body.has-discovery .flash-label,
+body.is-world .flash-label {
+  fill: rgba(32, 31, 27, 0.9);
+  stroke: rgba(251, 247, 239, 0.86);
+}
+
+body.has-discovery .constellation-label,
+body.is-world .constellation-label {
+  stroke: rgba(251, 247, 239, 0.9);
+}
+
+body.has-discovery .artifact-dock {
+  color: var(--ink);
+}
+
+body.has-discovery .artifact-preview {
+  border-color: rgba(32, 31, 27, 0.18);
+  background: rgba(251, 247, 239, 0.9);
+  box-shadow: 0 16px 34px rgba(32, 31, 27, 0.13);
+}
+
+body.has-discovery .artifact-copy span {
+  color: rgba(32, 31, 27, 0.66);
+}
+
+body.has-discovery .artifact-card {
+  border-color: rgba(32, 31, 27, 0.16);
+  background: rgba(251, 247, 239, 0.86);
+  color: var(--ink);
+}
+
+body.has-discovery .artifact-card span {
+  color: rgba(32, 31, 27, 0.82);
+}
+
+body.is-world .world-back,
+body.is-world .world-copy,
+body.is-world .world-feature figcaption {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+body.is-world .world-copy h2 {
+  text-shadow: 0 0 18px color-mix(in srgb, var(--active-color) 18%, transparent);
+}
+
+body.is-world .world-copy [data-world-note] {
+  color: rgba(32, 31, 27, 0.74);
+}
+
+body.is-world .world-feature img {
+  border-color: rgba(32, 31, 27, 0.18);
+  box-shadow: 0 22px 48px rgba(32, 31, 27, 0.18);
+}
+
+body.is-world .scene-graphic {
+  opacity: 0.5;
+}
+
+.discovery-note {
+  display: none !important;
+}
+
+.relation-line {
+  stroke-width: 5.2;
+  stroke-dasharray: none;
+  opacity: 1;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, currentColor 62%, transparent));
+  animation: none;
+}
+
+.constellation-outline {
+  stroke-width: 3.2;
+  opacity: 0.72;
+}
+
+.constellation-picture[data-lens-id="healthcare"] .constellation-outline {
+  stroke-width: 4.2;
+  opacity: 0.92;
+}
+
+.constellation-drawn-node {
+  opacity: 0.45;
+}
+
+.constellation-label,
+.world-copy [data-world-kicker],
+.world-copy [data-world-note],
+.world-feature figcaption {
+  display: none;
+}
+
+.world-feature {
+  display: none !important;
+}
+
+.hover-comet {
+  color: var(--comet-color, var(--active-color));
+  pointer-events: none;
+}
+
+.comet-trail {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 2.3;
+  opacity: 0;
+  stroke-dasharray: 210;
+  stroke-dashoffset: 210;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, currentColor 42%, transparent));
+  animation: cometDraw 520ms ease forwards;
+}
+
+.comet-trail-short {
+  stroke-width: 1.5;
+  opacity: 0;
+  animation-delay: 70ms;
+}
+
+.comet-head {
+  fill: currentColor;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, currentColor 70%, transparent));
+}
+
+.star-comet {
+  color: var(--comet-color, var(--active-color));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.star-comet .comet-trail {
+  opacity: 0.62;
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+  animation: none;
+}
+
+.star-comet .comet-trail-short {
+  opacity: 0.38;
+}
+
+.star-comet .comet-head {
+  opacity: 0.9;
+}
+
+.star-hit.is-hover .star-comet,
+.star-hit:focus-visible .star-comet {
+  opacity: 1;
+}
+
+.artifact-dock {
+  left: 50%;
+  bottom: clamp(18px, 3vh, 34px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: auto;
+  max-width: min(760px, calc(100vw - 28px));
+  min-height: 88px;
+  padding: 8px 12px 10px;
+  border: 1.5px solid rgba(32, 31, 27, 0.14);
+  border-radius: 8px;
+  background: rgba(251, 247, 239, 0.68);
+  box-shadow: 0 18px 42px rgba(32, 31, 27, 0.16);
+  backdrop-filter: blur(10px);
+  transform: translateX(-50%) translateY(calc(100% + 26px));
+}
+
+.artifact-dock.is-visible,
+body.is-world .artifact-dock.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.artifact-preview {
+  display: none !important;
+}
+
+.artifact-carousel {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 7px;
+  overflow-x: auto;
+  overflow-y: visible;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0 2px;
+  scrollbar-width: none;
+}
+
+.artifact-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.artifact-card {
+  flex: 0 0 64px;
+  display: block;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  transform-origin: center bottom;
+  transition: transform 180ms cubic-bezier(0.18, 0.74, 0.2, 1), filter 180ms ease;
+}
+
+.artifact-card:hover,
+.artifact-card:focus-visible,
+.artifact-card.is-selected {
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  transform: translateY(-14px) scale(1.34);
+  z-index: 2;
+}
+
+.artifact-card img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  border: 1.5px solid rgba(32, 31, 27, 0.18);
+  border-radius: 8px;
+  object-fit: cover;
+  background: rgba(251, 247, 239, 0.9);
+  box-shadow: 0 10px 22px rgba(32, 31, 27, 0.18);
+  transition: box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.artifact-card:hover img,
+.artifact-card:focus-visible img,
+.artifact-card.is-selected img {
+  border-color: var(--active-color);
+  box-shadow: 0 16px 34px rgba(32, 31, 27, 0.24), 0 0 0 2px color-mix(in srgb, var(--active-color) 46%, transparent);
+}
+
+.artifact-card span,
+.artifact-copy,
+.artifact-go {
+  display: none;
+}
+
+.world-copy {
+  pointer-events: none;
+}
+
+body.is-world .world-feature:not([hidden]) {
+  display: block !important;
+  right: clamp(18px, 5.2vw, 76px);
+  bottom: clamp(136px, 19vh, 202px);
+  width: min(330px, 28vw);
+  opacity: 0.9;
+  transform: rotate(1.4deg);
+  pointer-events: none;
+}
+
+body.is-world.is-arriving .world-feature:not([hidden]) {
+  animation: photoArrive 520ms cubic-bezier(0.18, 0.74, 0.2, 1);
+}
+
+body.is-world .world-feature img {
+  max-height: 310px;
+  border: 1.5px solid rgba(32, 31, 27, 0.2);
+  border-radius: 8px;
+  object-fit: contain;
+  background: rgba(251, 247, 239, 0.74);
+  box-shadow: 0 18px 42px rgba(32, 31, 27, 0.18);
+}
+
+.object-preview-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.object-preview {
+  position: absolute;
+  left: clamp(118px, calc(var(--preview-x) * 1vw), calc(100vw - 118px));
+  top: clamp(158px, calc(var(--preview-y) * 1vh), calc(100svh - 124px));
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  transform-origin: center;
+}
+
+.object-preview.is-low {
+  top: clamp(160px, calc(var(--preview-y) * 1vh), calc(100svh - 136px));
+}
+
+.object-preview-orbit {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  pointer-events: none;
+}
+
+.object-preview-ring {
+  position: absolute;
+  inset: 52px;
+  border: 1.5px solid color-mix(in srgb, var(--preview-color) 34%, rgba(32, 31, 27, 0.14));
+  border-radius: 999px;
+  opacity: 0.54;
+  transform: rotate(-14deg) scaleY(0.5);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--preview-color) 16%, transparent);
+}
+
+.object-preview-frame {
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 50%;
+  width: 104px;
+  height: 78px;
+  padding: 4px;
+  border: 1.5px solid rgba(32, 31, 27, 0.16);
+  border-radius: 8px;
+  background: rgba(251, 247, 239, 0.78);
+  box-shadow: 0 14px 30px rgba(32, 31, 27, 0.16);
+  overflow: hidden;
+  opacity: 1;
+  transform:
+    translate(-50%, -50%)
+    rotate(var(--satellite-angle, 0deg))
+    translateX(var(--satellite-radius, 66px))
+    rotate(var(--satellite-counter-angle, 0deg))
+    rotate(var(--satellite-tilt, -2deg))
+    scale(1);
+}
+
+.object-preview-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.object-preview-frame.frame-1 {
+  z-index: 3;
+  --satellite-tilt: -2deg;
+}
+
+.object-preview-frame.frame-2 {
+  z-index: 2;
+  --satellite-tilt: 5deg;
+}
+
+.object-preview-frame.frame-3 {
+  z-index: 1;
+  --satellite-tilt: -7deg;
+}
+
+.object-preview.is-locked .object-preview-frame {
+  border-color: color-mix(in srgb, var(--preview-color) 42%, rgba(32, 31, 27, 0.2));
+  box-shadow:
+    0 16px 34px rgba(32, 31, 27, 0.18),
+    0 0 0 2px color-mix(in srgb, var(--preview-color) 25%, transparent),
+    0 0 20px color-mix(in srgb, var(--preview-color) 22%, transparent);
+}
+
+.object-explore {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1.5px solid rgba(32, 31, 27, 0.72);
+  border-radius: 6px;
+  background: rgba(251, 247, 239, 0.82);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
+  pointer-events: auto;
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--preview-color) 30%, transparent);
+}
+
+.object-explore:hover,
+.object-explore:focus-visible {
+  outline: none;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--preview-color) 45%, transparent);
+}
+
+@keyframes cometDraw {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 210;
+  }
+
+  28% {
+    opacity: 0.82;
+  }
+
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes tunnelRush {
+  0% {
+    opacity: 0.88;
+    transform: scale(0.5);
+    filter: blur(0);
+  }
+
+  72% {
+    opacity: 0.78;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.75);
+    filter: blur(5px);
+  }
+}
+
+@keyframes arrivalSettle {
+  0% {
+    transform: scale(0.94);
+    filter: blur(4px) saturate(1.24);
+    opacity: 0.46;
+  }
+
+  100% {
+    transform: scale(1);
+    filter: saturate(1.08);
+    opacity: 0.72;
+  }
+}
+
+@keyframes photoArrive {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.86) rotate(-3deg);
+  }
+
+  100% {
+    opacity: 0.9;
+    transform: translateY(0) scale(1) rotate(1.4deg);
+  }
+}
+
+@keyframes previewOrbitIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.72);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes satelliteArrive {
+  0% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--satellite-angle, 0deg))
+      translateX(calc(var(--satellite-radius, 66px) * 0.62))
+      rotate(var(--satellite-counter-angle, 0deg))
+      rotate(var(--satellite-tilt, -2deg))
+      scale(0.68);
+  }
+
+  100% {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--satellite-angle, 0deg))
+      translateX(var(--satellite-radius, 66px))
+      rotate(var(--satellite-counter-angle, 0deg))
+      rotate(var(--satellite-tilt, -2deg))
+      scale(1);
+  }
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes crawl {
+  to {
+    stroke-dashoffset: -160;
+  }
+}
+
+@keyframes constellationIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 800px) {
+  .page-shell {
+    min-height: 100svh;
+  }
+
+  .brand-script {
+    top: 18px;
+    left: 19px;
+    font-size: 28px;
+  }
+
+  .lens-panel {
+    left: 18px;
+    right: 18px;
+    top: 66px;
+    justify-items: start;
+  }
+
+  .lens-buttons {
+    justify-content: start;
+  }
+
+  .stage {
+    top: 100px;
+    bottom: 136px;
+  }
+
+  .discovery-note {
+    left: 18px;
+    right: 18px;
+    bottom: 18px;
+    max-width: none;
+  }
+
+  body.has-artifacts .discovery-note {
+    bottom: 176px;
+  }
+
+  .artifact-dock {
+    display: flex;
+    gap: 0;
+    width: auto;
+    max-width: calc(100vw - 24px);
+    min-height: 74px;
+    padding: 7px 10px 9px;
+  }
+
+  .artifact-preview {
+    grid-template-columns: 68px 1fr auto;
+    min-height: 92px;
+  }
+
+  .artifact-preview img {
+    width: 68px;
+    height: 74px;
+  }
+
+  .artifact-copy span {
+    display: none;
+  }
+
+  .artifact-card {
+    flex: 0 0 54px;
+    width: 54px;
+    height: 54px;
+  }
+
+  .artifact-card img {
+    width: 54px;
+    height: 54px;
+  }
+
+  .world-back {
+    left: auto;
+    right: 18px;
+    top: 128px;
+  }
+
+  .world-copy {
+    top: 178px;
+  }
+
+  .world-feature {
+    right: 18px;
+    bottom: 150px;
+    width: min(230px, 48vw);
+  }
+
+  .world-feature figcaption {
+    font-size: 14px;
+  }
+
+  .object-preview {
+    left: clamp(116px, calc(var(--preview-x) * 1vw), calc(100vw - 116px));
+    top: clamp(154px, calc(var(--preview-y) * 1vh), calc(100svh - 116px));
+  }
+
+  .object-preview-orbit {
+    width: 174px;
+    height: 174px;
+  }
+
+  .object-preview-ring {
+    inset: 42px;
+  }
+
+  .object-preview-frame {
+    width: 84px;
+    height: 64px;
+  }
+
+  .object-explore {
+    min-height: 32px;
+  }
+
+  .scene-graphic {
+    height: 176px;
+  }
+}
+
+@media (max-width: 520px) {
+  .lens-button {
+    min-height: 31px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  .stage {
+    top: 128px;
+    bottom: 148px;
+  }
+
+  .world-copy {
+    top: 154px;
+  }
+
+  .world-feature {
+    display: none;
+  }
+}
+
+.constellation-picture[data-lens-id="healthcare"] .relation-line {
+  stroke-width: 3.6;
+  opacity: 0.46;
+  filter: drop-shadow(0 0 5px rgba(49, 185, 111, 0.28));
+}
+
+.constellation-picture[data-lens-id="healthcare"] .constellation-node {
+  fill: #31b96f;
+  filter: drop-shadow(0 0 5px rgba(49, 185, 111, 0.36));
+}
+
+.artifact-dock {
+  min-height: 124px;
+  padding: 10px 14px 12px;
+}
+
+.artifact-card {
+  flex: 0 0 96px;
+  width: 96px;
+  height: 96px;
+}
+
+.artifact-card img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  padding: 4px;
+}
+
+.artifact-card:hover,
+.artifact-card:focus-visible,
+.artifact-card.is-selected {
+  transform: translateY(-22px) scale(1.34);
+}
+
+body.is-jumping .world-panel,
+body.is-jumping .artifact-dock {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 800px) {
+  .artifact-dock {
+    min-height: 102px;
+    padding: 8px 10px 10px;
+  }
+
+  .artifact-card {
+    flex: 0 0 78px;
+    width: 78px;
+    height: 78px;
+  }
+
+  .artifact-card img {
+    width: 78px;
+    height: 78px;
+  }
+
+  body.is-world .world-feature:not([hidden]) {
+    right: 16px;
+    bottom: 132px;
+    width: min(210px, 44vw);
+    opacity: 0.82;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+}
