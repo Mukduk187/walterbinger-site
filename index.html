@@ -52,6 +52,11 @@
   .cta{margin-top:24px;display:flex;gap:12px;flex-wrap:wrap}
   .btn{display:inline-block;border:1.5px solid var(--ink);padding:9px 18px;text-decoration:none;font-size:15px;letter-spacing:.02em;transition:.2s}
   .btn:hover{background:var(--ink);color:var(--paper)}
+  .herobody{display:flex;gap:38px;align-items:flex-start;margin-top:30px}
+  .herotext{flex:1;min-width:0}
+  .herotext .thesis{margin-top:0}
+  .portrait{width:230px;height:230px;object-fit:cover;border-radius:10px;border:1px solid var(--line);box-shadow:0 14px 34px -20px rgba(0,0,0,.55);flex:none}
+  .avatar{width:92px;height:92px;border-radius:50%;object-fit:cover;border:1px solid var(--line);float:right;margin:0 0 10px 22px}
 
   /* ---------- Jump nav ---------- */
   nav.jump{position:sticky;top:0;background:rgba(247,242,232,.92);backdrop-filter:blur(4px);
@@ -110,6 +115,9 @@
     .grid4{grid-template-columns:1fr}
     .name{font-size:24px}
     nav.jump{display:none}
+    .herobody{flex-direction:column-reverse;gap:22px;align-items:center}
+    .herotext{width:100%}
+    .portrait{width:170px;height:170px}
   }
 
   /* ---------- Print ---------- */
@@ -129,15 +137,19 @@
     <div class="name">Walter&nbsp;D.&nbsp;Binger</div>
     <div class="contactline">Greater Boston, MA&nbsp;&nbsp;·&nbsp;&nbsp;(917)&nbsp;974-9648&nbsp;&nbsp;·&nbsp;&nbsp;wbinger@gmail.com&nbsp;&nbsp;·&nbsp;&nbsp;linkedin.com/in/walter-binger</div>
     <hr class="rule">
-    <h1 class="thesis">I help people and systems work better together.
-      <span class="sub">I make complicated work something people can actually sustain.</span>
-    </h1>
-    <p class="avail">Operations, implementation, and client delivery across healthcare, hospitality, and international environments. Open to remote opportunities and select Boston-area hybrid work — full-time, consulting, fractional, or contract.</p>
-    <div class="cta">
-      <a class="btn" href="#work">See the work</a>
-      <a class="btn" href="#contact">Get in touch</a>
-      <!-- Drop Walter-Binger-CV-2026.pdf next to this file to enable the download below -->
-      <a class="btn" href="Walter-Binger-CV-2026.pdf">Download CV (PDF)</a>
+    <div class="herobody">
+      <div class="herotext">
+        <h1 class="thesis">I help people and systems work better together.
+          <span class="sub">I make complicated work something people can actually sustain.</span>
+        </h1>
+        <p class="avail">Operations, implementation, and client delivery across healthcare, hospitality, and international environments. Open to remote opportunities and select Boston-area hybrid work — full-time, consulting, fractional, or contract.</p>
+        <div class="cta">
+          <a class="btn" href="#work">See the work</a>
+          <a class="btn" href="#contact">Get in touch</a>
+          <a class="btn" href="Walter-Binger-CV-2026.pdf">Download CV (PDF)</a>
+        </div>
+      </div>
+      <img class="portrait" src="walter-hero.jpg" width="230" height="230" alt="Walter Binger" loading="eager">
     </div>
   </div>
 </header>
@@ -305,6 +317,7 @@
 <section id="contact" class="contact">
   <div class="wrap">
     <div class="eyebrow">Contact</div>
+    <img class="avatar" src="walter-portrait.jpg" width="92" height="92" alt="Walter Binger">
     <p style="font-size:19px;max-width:28em;margin:0">If your team, or one you know, could use me — or you just want to compare notes — I'd welcome the conversation.</p>
     <p style="margin-top:16px;font-size:17px">
       <a href="mailto:wbinger@gmail.com">wbinger@gmail.com</a>&nbsp;&nbsp;·&nbsp;&nbsp;
