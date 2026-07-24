@@ -1,78 +1,325 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Walter Binger</title>
-<meta name="description" content="Walter Binger — operations systems leader. Healthcare turnarounds, hospitality ventures, practical tools for messy human systems.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<title>Walter Binger — Operations · Implementation · Client Delivery</title>
+<meta name="description" content="Walter Binger — operations, implementation, and client delivery across healthcare, hospitality, and international environments. One career spent helping people and systems work better together.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
+
+<!-- Open Graph / link previews -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Walter Binger — Operations · Implementation · Client Delivery">
+<meta property="og:description" content="One career spent helping people and systems work better together. Healthcare, hospitality, and international operations.">
+<meta property="og:url" content="https://walterbinger.com">
+
+<style>
+  :root{
+    --paper:#f7f2e8;
+    --ink:#1c1a17;
+    --ink-soft:#4a463f;
+    --line:#d8cfbe;
+    --rule:#1c1a17;
+    /* lens accents — used only as quiet hover glints */
+    --imp:#3b6ea5;   /* implementation — cool blue */
+    --cs:#b06a4f;    /* customer success — warm rose/amber */
+    --ops:#4f7a54;   /* operations — deep green */
+    --xf:#7a5a97;    /* cross-functional — violet */
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    line-height:1.55;font-size:18px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:0 26px}
+  a{color:inherit}
+  h1,h2,h3{font-weight:600;line-height:1.15;margin:0}
+  section{padding:38px 0;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:none}
+  .eyebrow{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px}
+
+  /* ---------- Hero ---------- */
+  header{padding:64px 0 30px}
+  .name{font-size:30px;letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+  .contactline{font-style:italic;color:var(--ink-soft);font-size:15px;margin-top:10px}
+  .rule{height:0;border:none;border-top:2.5px solid var(--rule);margin:18px 0 0}
+  .thesis{font-size:29px;line-height:1.25;margin-top:30px;max-width:16em}
+  .thesis .sub{display:block;font-size:20px;color:var(--ink-soft);margin-top:10px;font-style:italic}
+  .avail{margin-top:20px;font-size:16px;color:var(--ink-soft)}
+  .cta{margin-top:24px;display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-block;border:1.5px solid var(--ink);padding:9px 18px;text-decoration:none;font-size:15px;letter-spacing:.02em;transition:.2s}
+  .btn:hover{background:var(--ink);color:var(--paper)}
+
+  /* ---------- Jump nav ---------- */
+  nav.jump{position:sticky;top:0;background:rgba(247,242,232,.92);backdrop-filter:blur(4px);
+    border-bottom:1px solid var(--line);z-index:5;font-size:13px;letter-spacing:.04em}
+  nav.jump .wrap{display:flex;gap:22px;flex-wrap:wrap;padding-top:11px;padding-bottom:11px}
+  nav.jump a{text-decoration:none;color:var(--ink-soft)}
+  nav.jump a:hover{color:var(--ink)}
+
+  /* ---------- Proof strip ---------- */
+  .proof{background:var(--ink);color:var(--paper)}
+  .proof .wrap{padding-top:20px;padding-bottom:20px;display:flex;flex-wrap:wrap;gap:8px 26px;
+    font-size:15px;letter-spacing:.02em;justify-content:center;text-align:center}
+  .proof b{font-weight:600}
+
+  /* ---------- What I do ---------- */
+  .grid4{display:grid;grid-template-columns:1fr 1fr;gap:26px 34px;margin-top:6px}
+  .doblk h3{font-size:19px;margin-bottom:6px}
+  .doblk p{margin:0;color:var(--ink-soft);font-size:16px}
+
+  /* ---------- Lenses ---------- */
+  .lens{border:1px solid var(--line);padding:18px 20px;margin-top:16px;position:relative;transition:.2s}
+  .lens:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent,var(--line))}
+  .lens:hover{box-shadow:0 6px 22px -14px var(--accent,#000);transform:translateY(-1px)}
+  .lens h3{font-size:18px}
+  .lens .who{font-style:italic;color:var(--ink-soft);font-size:15.5px;margin-top:4px}
+  .lens .thes{font-size:15.5px;margin-top:8px}
+  .lenslead{max-width:34em;font-size:18px;margin:0 0 4px}
+
+  /* ---------- Experience ---------- */
+  .job{margin-top:26px}
+  .job .top{display:flex;justify-content:space-between;gap:16px;align-items:baseline;flex-wrap:wrap}
+  .job .org{font-size:18px;font-weight:600}
+  .job .role{font-style:italic;color:var(--ink-soft);font-size:15.5px}
+  .job .dates{font-size:14px;color:var(--ink-soft);white-space:nowrap;letter-spacing:.03em}
+  .job ul{margin:9px 0 0;padding-left:20px}
+  .job li{margin-bottom:6px;font-size:16px}
+  .subhead{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin:34px 0 2px}
+  p.body{font-size:16.5px;color:var(--ink-soft)}
+  .impact li{font-size:16.5px;margin-bottom:8px}
+
+  /* ---------- Contact ---------- */
+  .contact a{font-weight:600;text-decoration:none;border-bottom:1.5px solid var(--line)}
+  .contact a:hover{border-color:var(--ink)}
+  .buildnod{margin-top:16px;color:var(--ink-soft);font-size:16px}
+
+  /* ---------- Footer / rabbit hole ---------- */
+  footer{padding:40px 0 60px;text-align:center}
+  .hole{display:inline-block;color:var(--ink-soft);font-size:14px;letter-spacing:.04em;text-decoration:none}
+  .hole .star{display:inline-block;animation:tw 3.5s ease-in-out infinite}
+  .hole:hover{color:var(--ink)}
+  @keyframes tw{0%,100%{opacity:.35}50%{opacity:1}}
+
+  @media (max-width:620px){
+    body{font-size:17px}
+    .thesis{font-size:24px}
+    .grid4{grid-template-columns:1fr}
+    .name{font-size:24px}
+    nav.jump{display:none}
+  }
+
+  /* ---------- Print ---------- */
+  @media print{
+    :root{--paper:#fff}
+    body{font-size:11pt;color:#000}
+    nav.jump,.cta,.proof,footer,.hole{display:none!important}
+    section{border-color:#bbb;padding:12px 0}
+    a{color:#000;text-decoration:none}
+  }
+</style>
 </head>
 <body>
-<div class="page">
 
-  <header class="hero">
-    <p class="mark" aria-hidden="true">
-      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="6" cy="26" r="1.6" fill="currentColor"/>
-        <circle cx="17" cy="8" r="1.8" fill="currentColor"/>
-        <circle cx="28" cy="22" r="1.4" fill="currentColor"/>
-        <circle cx="21" cy="30" r="1.2" fill="currentColor"/>
-        <path d="M6 26 L17 8 L28 22 L21 30" stroke="#b3005c" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </p>
-    <h1>Walter Binger</h1>
-    <p class="tagline">I build useful things in messy human systems.</p>
-  </header>
+<header>
+  <div class="wrap">
+    <div class="name">Walter&nbsp;D.&nbsp;Binger</div>
+    <div class="contactline">Greater Boston, MA&nbsp;&nbsp;·&nbsp;&nbsp;(917)&nbsp;974-9648&nbsp;&nbsp;·&nbsp;&nbsp;wbinger@gmail.com&nbsp;&nbsp;·&nbsp;&nbsp;linkedin.com/in/walter-binger</div>
+    <hr class="rule">
+    <h1 class="thesis">I help people and systems work better together.
+      <span class="sub">I make complicated work something people can actually sustain.</span>
+    </h1>
+    <p class="avail">Operations, implementation, and client delivery across healthcare, hospitality, and international environments. Open to remote opportunities and select Boston-area hybrid work — full-time, consulting, fractional, or contract.</p>
+    <div class="cta">
+      <a class="btn" href="#work">See the work</a>
+      <a class="btn" href="#contact">Get in touch</a>
+      <!-- Drop Walter-Binger-CV-2026.pdf next to this file to enable the download below -->
+      <a class="btn" href="Walter-Binger-CV-2026.pdf">Download CV (PDF)</a>
+    </div>
+  </div>
+</header>
 
-  <main>
-    <section class="bio">
-      <p>15+ years walking into disrupted environments, earning trust quickly, and turning messy field reality into workflows people actually use — across skilled-nursing operations and independent hospitality ventures in the U.S. and Argentina. Spanish and French fluent.</p>
-    </section>
+<nav class="jump">
+  <div class="wrap">
+    <a href="#do">What I do</a>
+    <a href="#lenses">Four lenses</a>
+    <a href="#impact">Selected impact</a>
+    <a href="#work">Experience</a>
+    <a href="#more">Background</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
 
-    <section class="highlights">
-      <article class="highlight">
-        <h2>Healthcare Services Group</h2>
-        <p class="role">District Manager</p>
-        <p>Grew the district from 5 to 8 skilled-nursing and rehab facilities in a year, managing 100+ employees. Led SOP resets and MealTracker adoption, and supported the district through roughly 32 state surveys over three years at a 90%+ deficiency-free rate.</p>
-      </article>
-
-      <article class="highlight">
-        <h2>LiveWell</h2>
-        <p class="role">Crisis Operations</p>
-        <p>Took a crisis assignment across an 11-facility region and reversed a roughly $45K/month deficit in under six weeks.</p>
-      </article>
-
-      <article class="highlight">
-        <h2>Island Nursing Home</h2>
-        <p class="role">Continuity &amp; Recovery</p>
-        <p>Held crisis continuity through a regulatory shutdown and COVID response, including the relocation of about 70 residents, while keeping resident feedback loops running.</p>
-      </article>
-
-      <article class="highlight">
-        <h2>Independent Hospitality</h2>
-        <p class="role">Founder / Operator</p>
-        <p>Empanadas, Son!, Circus RestoBar, and Nimbus — built and ran hospitality concepts across Brooklyn, the Lower East Side, and Buenos Aires: menus, buildout, staffing, POS workflows, vendors, and daily service.</p>
-      </article>
-    </section>
-
-    <section class="contact">
-      <h2>Get in touch</h2>
-      <p class="contact-links">
-        <a href="mailto:wbinger@gmail.com" id="email-link">wbinger@gmail.com</a>
-        <span class="divider" aria-hidden="true">·</span>
-        <a href="https://linkedin.com/in/walter-binger" target="_blank" rel="noopener">linkedin.com/in/walter-binger</a>
-      </p>
-    </section>
-  </main>
-
-  <footer>
-    <p>The rest of this site is in progress. This page will do for now.</p>
-  </footer>
-
+<div class="proof">
+  <div class="wrap">
+    <span><b>8</b> facilities</span>
+    <span><b>100+</b> staff</span>
+    <span><b>$5M+</b> operating scope</span>
+    <span><b>90%+</b> deficiency-free outcomes across ~32 surveys</span>
+    <span><b>$45K/mo</b> turnaround</span>
+  </div>
 </div>
-<script src="script.js"></script>
+
+<section id="do">
+  <div class="wrap">
+    <div class="eyebrow">What I do</div>
+    <div class="grid4">
+      <div class="doblk"><h3>Stabilize operations</h3><p>Turn disorder into clear, repeatable routines.</p></div>
+      <div class="doblk"><h3>Lead implementation</h3><p>Close the gap between a system going live and people actually using it.</p></div>
+      <div class="doblk"><h3>Rebuild trust</h3><p>Realign clients, leadership, and frontline teams after confidence breaks down.</p></div>
+      <div class="doblk"><h3>Translate between worlds</h3><p>Connect executives, clients, systems, and frontline reality so the work becomes usable.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="lenses">
+  <div class="wrap">
+    <div class="eyebrow">One career, four lenses</div>
+    <p class="lenslead">I don't have four different careers. I've spent one career helping people and systems work better together — here it is, translated for four kinds of problem.</p>
+    <div class="lens" style="--accent:var(--imp)">
+      <h3>Implementation &amp; Client Onboarding</h3>
+      <div class="who">Healthcare-tech onboarding, adoption, professional services.</div>
+      <div class="thes">“I make adoption succeed because I've been the customer.”</div>
+    </div>
+    <div class="lens" style="--accent:var(--cs)">
+      <h3>Customer Success &amp; Client Delivery</h3>
+      <div class="who">Provider-facing CS, client recovery, relationship management.</div>
+      <div class="thes">“I rebuild trust before I solve problems.”</div>
+    </div>
+    <div class="lens" style="--accent:var(--ops)">
+      <h3>Operations Leadership</h3>
+      <div class="who">Multi-site operations, turnaround, service delivery.</div>
+      <div class="thes">“I stabilize broken organizations.”</div>
+    </div>
+    <div class="lens" style="--accent:var(--xf)">
+      <h3>Cross-Functional Leadership</h3>
+      <div class="who">When the role spans operations, implementation, and client delivery.</div>
+      <div class="thes">Intentional range, not a title still being searched for.</div>
+    </div>
+    <p class="buildnod" style="margin-top:18px">The complete career story lives in the <a href="Walter-Binger-CV-2026.pdf" style="border-bottom:1.5px solid var(--line);text-decoration:none;font-weight:600">full CV (PDF)</a>.</p>
+  </div>
+</section>
+
+<section id="impact">
+  <div class="wrap">
+    <div class="eyebrow">Selected impact</div>
+    <ul class="impact">
+      <li>Led operations and system adoption across eight skilled-nursing, rehabilitation, and memory-care facilities (~850 residents, 100+ staff, a $5M+ operating budget), growing the district from five sites to eight in the first year.</li>
+      <li>Rolled out MealTracker, integrated with PointClickCare, across all eight facilities — day-one go-lives, most teams competent within the first week, supervised largely from remote.</li>
+      <li>Sustained better than 90% deficiency-free outcomes across roughly 32 state surveys over three years, and reversed a ~$45K/month operating deficit across an 11-facility region in under six weeks.</li>
+      <li>Reopened two kitchens closed by state and federal inspectors by retraining entire facilities and supporting the survey outcomes that lift admissions holds; navigated union accounts through ownership transitions and forced layoffs.</li>
+      <li>Built durable frontline leadership: promoted five cooks to Food Service Director, hired and trained four managers from outside healthcare who each passed deficiency-free first-year surveys, and advanced one director into a District Manager role.</li>
+      <li>Led on-the-ground COVID crisis support and the safe relocation of ~70 residents at facility closure.</li>
+      <li>Launched and operated hospitality ventures in New York, Buenos Aires, France, and Benin — including ownership of a Lower East Side restaurant, a Buenos Aires restaurant-bar run entirely in Spanish, and opening support for a Brooklyn restaurant later listed in the Michelin Guide.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="work">
+  <div class="wrap">
+    <div class="eyebrow">Experience</div>
+
+    <div class="subhead">Senior care &amp; multi-site operations</div>
+
+    <div class="job">
+      <div class="top"><div><span class="org">Healthcare Services Group, Inc.</span> — <span class="role">District Manager · Massachusetts (Hybrid)</span></div><div class="dates">May 2023 – Jun 2026</div></div>
+      <ul>
+        <li>Oversaw eight skilled-nursing and rehabilitation facilities, each with a secure memory-care unit, across varying census, staffing, union, regulatory, and leadership conditions.</li>
+        <li>Grew the district from five facilities to eight in the first year by stabilizing newly awarded, at-risk accounts; managed ~$2.5M in annual food, paper, and chemical spend ($8.50 PPD across ~850 residents) plus frontline labor.</li>
+        <li>Rolled out MealTracker (integrated with PointClickCare) across all eight sites — trained each director directly, launched on day one, brought most teams to competency within the first week.</li>
+        <li>Sustained better than 90% deficiency-free outcomes across ~32 state surveys over three years by converting recurring problems into audit tools and repeatable routines.</li>
+        <li>Reopened two kitchens closed by state and federal inspectors — an eleven-day temporary kitchen at Royal Meadowview and an outdoor service operation during a full rebuild at Bourne Manor.</li>
+        <li>Navigated union accounts through ownership transitions; repeatedly entrusted with the hardest accounts, including an emergency takeover left understaffed by a departing manager.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="top"><div><span class="org">LiveWell Healthcare Solutions</span> — <span class="role">Regional Food Service Director · MA &amp; RI (Hybrid)</span></div><div class="dates">Jan 2023 – May 2023</div></div>
+      <ul>
+        <li>Took an eleven-facility region that was losing money and returned it to stability in under six weeks, recovering ~$45K/month by correcting purchasing leakage, overproduction, waste, and accountability gaps.</li>
+        <li>Standardized cost tracking, production visibility, and compliance follow-up across all sites with visible field presence and honest communication.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="top"><div><span class="org">Eliot Center for Health &amp; Rehabilitation</span> — <span class="role">Certified Dietary Manager · Natick, MA</span></div><div class="dates">Sep 2022 – Jan 2023</div></div>
+      <ul><li>Promoted into a larger, higher-volume facility during an ownership transition; held service, budget, and documentation standards through the change while supporting an Administrator-in-Training track.</li></ul>
+    </div>
+
+    <div class="job">
+      <div class="top"><div><span class="org">East Side Center for Health &amp; Rehabilitation</span> — <span class="role">Certified Dietary Manager / Interim Social Services Director · Bangor, ME</span></div><div class="dates">Nov 2021 – Sep 2022</div></div>
+      <ul><li>Expanded well beyond the dietary role at the height of the pandemic — care-plan meetings, non-clinical plans of correction, and IT support — earning a promotion on the strength of that range.</li></ul>
+    </div>
+
+    <div class="job">
+      <div class="top"><div><span class="org">Island Nursing Home &amp; Care Center</span> — <span class="role">Food Service Director (CDM/CFPP) · Deer Isle, ME</span></div><div class="dates">Feb 2020 – Oct 2021</div></div>
+      <ul>
+        <li>Entered long-term care as COVID began and rebuilt a struggling department into one of the facility's most appreciated, establishing a Resident Food Council that gave residents a stronger voice in daily service.</li>
+        <li>Provided prolonged on-the-ground crisis support — eighteen-hour shifts, infection-control barrier work, resident and post-mortem care support — and helped safely relocate ~70 residents when the facility closed.</li>
+      </ul>
+    </div>
+
+    <div class="subhead">Sales leadership</div>
+    <div class="job">
+      <div class="top"><div><span class="org">Fisher Agencies / American Income Life</span> — <span class="role">General Agent / Acting Master General Agent · Bangor, ME</span></div><div class="dates">2018 – 2019</div></div>
+      <ul><li>Promoted twice within six months into office leadership and recognized as a top-producing manager in 2018; recruited, hired, and trained new agents at high volume and ran full office operations before the branch consolidated to remote-only roles.</li></ul>
+    </div>
+
+    <div class="subhead">Entrepreneurial, hospitality &amp; launch experience</div>
+    <div class="job">
+      <div class="top"><div><span class="org">Empanadas Son!</span> — <span class="role">Owner, Proprietor &amp; General Manager · Lower East Side, NY</span></div><div class="dates">Feb 2015 – Jul 2016</div></div>
+      <ul><li>Built a Lower East Side restaurant from concept to daily operation — buildout, menu, brand, vendors, production, hiring, payroll, delivery, inventory, and POS workflows; featured in TimeOut New York.</li></ul>
+    </div>
+    <div class="job">
+      <div class="top"><div><span class="org">Prospect Restaurant</span> — <span class="role">Opening Consultant · Line Chef · Expediter · Manager · Brooklyn, NY</span></div><div class="dates">May 2012 – Jul 2014</div></div>
+      <ul><li>Joined before opening and stayed through the transition from construction project to working restaurant — a practical education in implementation: launch the system, then keep it alive under service pressure. Later listed in the Michelin Guide.</li></ul>
+    </div>
+    <div class="job">
+      <div class="top"><div><span class="org">Circus RestoBar</span> — <span class="role">General Manager / Operator / Executive Chef · San Telmo, Buenos Aires</span></div><div class="dates">May 2009 – Feb 2012</div></div>
+      <ul><li>Rebuilt a Buenos Aires hotel restaurant-bar entirely in Spanish, moving from reception support into full food-and-beverage ownership across menu, brand, vendors, events, POS/service workflows, and profitability.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="more">
+  <div class="wrap">
+    <div class="eyebrow">Additional background</div>
+    <p class="body"><b>Poetic Kinetics, Los Angeles</b> — Production Assistant (2016): supported creation and installation of <i>Nimbus</i> at the Walt Disney Concert Hall. <b>Maxwell and Son Contracting, New York</b> — Foreman / Head Carpenter (2007–2008): led a team of 12+ on restaurant buildouts from demolition to opening. <b>Van Hoek &amp; Heights Woodworking, Brooklyn</b> — Cabinet Maker / Project Supervisor (2006–2008). Additional culinary roles including Barano, Aragosta, The Farmhouse Inn, Le Rencard (France), and a culinary externship at Chanterelle.</p>
+
+    <div class="subhead">International operations, consulting &amp; board service</div>
+    <p class="body"><b>Bio-Benin</b> — Board of Directors (Benin / Remote, current): operational perspective, cross-cultural communication, and organizational development for a mission-driven initiative. <b>Chez Guillaume &amp; Bio-Benin</b> — Restaurant &amp; Hospitality Consultant, Natitingou, Benin (Winter 2017): created a bar program, supported renovation planning, and improved workflow and service structure for a café/restaurant that has become a popular local and tourist destination.</p>
+
+    <div class="subhead">Early foundations</div>
+    <p class="body"><b>First National Tour, <i>The Secret Garden</i></b> — performed as Colin at age eleven, traveling to a new city nearly every week while performing three to four live shows weekly. That early discipline around rehearsal, adaptability, and performing under pressure became the same muscle later used in leadership, coaching, and public-facing operations.</p>
+
+    <div class="subhead">Education, certifications, languages &amp; tools</div>
+    <p class="body">Pitzer College — BA, International Intercultural Studies &amp; Studio Art. University of Florida — CDM/CFPP coursework. Certified Dietary Manager (CDM/CFPP); ServSafe Manager; former Maine Life &amp; Health Insurance Producer.<br>
+    Languages: English; fluent Spanish; conversational French.<br>
+    Systems: PointClickCare, MealTracker, Micros / Aloha / Square / Toast, Microsoft Office, Google Workspace, Canva, AI-assisted workflow documentation.</p>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="eyebrow">Contact</div>
+    <p style="font-size:19px;max-width:28em;margin:0">If your team, or one you know, could use me — or you just want to compare notes — I'd welcome the conversation.</p>
+    <p style="margin-top:16px;font-size:17px">
+      <a href="mailto:wbinger@gmail.com">wbinger@gmail.com</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+      <a href="https://linkedin.com/in/walter-binger">LinkedIn</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+      <a href="tel:+19179749648">(917) 974-9648</a>
+    </p>
+    <p class="buildnod">I also design and rebuild things — sites, systems, and professional narratives. If something needs clearer structure, better framing, or a more usable form, we should talk.</p>
+  </div>
+</section>
+
+<footer>
+  <a class="hole" href="#" title="Something is being built beneath the surface." aria-label="A larger project is taking shape">
+    <span class="star">✦</span>&nbsp; beneath this page, a larger project is taking shape
+  </a>
+</footer>
+
 </body>
 </html>
