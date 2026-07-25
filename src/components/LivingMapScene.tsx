@@ -245,6 +245,7 @@ export function LivingMapScene({
   const setHovered = useUniverseStore((state) => state.setHovered);
   const setSelected = useUniverseStore((state) => state.setSelected);
   const enterWorld = useUniverseStore((state) => state.enterWorld);
+  const enterFieldBoard = useUniverseStore((state) => state.enterFieldBoard);
   const returnToSky = useUniverseStore((state) => state.returnToSky);
   const reducedMotion = useReducedMotion();
 
@@ -636,8 +637,20 @@ export function LivingMapScene({
     }
     if (event.key === "Enter" && node.inspectable) {
       event.preventDefault();
-      enterWorld(node.id);
+      if (node.id === "field-tools") {
+        enterFieldBoard();
+      } else {
+        enterWorld(node.id);
+      }
     }
+  };
+
+  const exploreNode = (node: CelestialNode) => {
+    if (node.id === "field-tools") {
+      enterFieldBoard();
+      return;
+    }
+    enterWorld(node.id);
   };
 
   return (
@@ -799,7 +812,7 @@ export function LivingMapScene({
                   interactive
                     ? (event) => {
                         event.stopPropagation();
-                        enterWorld(node.id);
+                        exploreNode(node);
                       }
                     : undefined
                 }
@@ -907,7 +920,7 @@ export function LivingMapScene({
           ref={previewRef}
           type="button"
           className="explore-control"
-          onClick={() => enterWorld(selectedNode.id)}
+          onClick={() => exploreNode(selectedNode)}
         >
           <Expand aria-hidden="true" />
           <span>Explore</span>

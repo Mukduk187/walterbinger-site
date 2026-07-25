@@ -6,7 +6,15 @@ import {
   type LensId,
 } from "../domain/cosmology";
 
-export type AppMode = "cv" | "sky" | "world" | "convergence" | "snow-globe";
+export type AppMode =
+  | "cv"
+  | "sky"
+  | "world"
+  | "field-board"
+  | "convergence"
+  | "snow-globe";
+
+type FieldBoardReturnMode = "cv" | "sky" | "snow-globe";
 
 const persistedSchema = z.object({
   version: z.literal(1),
@@ -55,8 +63,11 @@ interface UniverseState {
   savedDiscoveryIds: string[];
   reducedMotionOverride: boolean | null;
   debugOpen: boolean;
+  fieldBoardReturnMode: FieldBoardReturnMode;
   enterSky: () => void;
   enterWorld: (id: string) => void;
+  enterFieldBoard: () => void;
+  leaveFieldBoard: () => void;
   returnToSky: () => void;
   returnToCv: () => void;
   startConvergence: () => void;
@@ -96,6 +107,7 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
   savedDiscoveryIds: initialPersistence.savedDiscoveryIds,
   reducedMotionOverride: initialPersistence.reducedMotionOverride ?? null,
   debugOpen: false,
+  fieldBoardReturnMode: "cv",
   enterSky: () => {
     navigateHash("/sky");
     set({ mode: "sky", selectedId: null, centeredId: null });
@@ -112,6 +124,39 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
         ? state.currentTripDiscoveryIds
         : [...state.currentTripDiscoveryIds, id],
     }));
+  },
+  enterFieldBoard: () => {
+    navigateHash("/field-board");
+    set((state) => ({
+      mode: "field-board",
+      fieldBoardReturnMode:
+        state.mode === "snow-globe"
+          ? "snow-globe"
+          : state.mode === "sky" || state.mode === "world"
+            ? "sky"
+            : "cv",
+      activeLensIds:
+        state.mode === "snow-globe" ? [] : state.activeLensIds,
+      centeredId: "field-tools",
+      selectedId: "field-tools",
+      currentTripDiscoveryIds: state.currentTripDiscoveryIds.includes(
+        "field-tools",
+      )
+        ? state.currentTripDiscoveryIds
+        : [...state.currentTripDiscoveryIds, "field-tools"],
+    }));
+  },
+  leaveFieldBoard: () => {
+    const destination = get().fieldBoardReturnMode;
+    if (destination === "sky") {
+      get().returnToSky();
+      return;
+    }
+    if (destination === "snow-globe") {
+      get().enterSnowGlobe();
+      return;
+    }
+    get().returnToCv();
   },
   returnToSky: () => {
     navigateHash("/sky");
@@ -202,6 +247,14 @@ export function hydrateRouteFromHash(): void {
 
   if (hash === "/sky") {
     useUniverseStore.setState({ mode: "sky" });
+    return;
+  }
+  if (hash === "/field-board") {
+    useUniverseStore.setState({
+      mode: "field-board",
+      centeredId: "field-tools",
+      selectedId: "field-tools",
+    });
     return;
   }
   if (hash.startsWith("/world/")) {

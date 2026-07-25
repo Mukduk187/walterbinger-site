@@ -13,6 +13,7 @@ describe("universe transitions", () => {
       selectedId: null,
       centeredId: null,
       currentTripDiscoveryIds: [],
+      fieldBoardReturnMode: "cv",
     });
   });
 
@@ -22,11 +23,14 @@ describe("universe transitions", () => {
       activeLensIds: [...LENS_IDS],
     });
 
-    useUniverseStore.getState().enterWorld("field-tools");
+    useUniverseStore.getState().enterFieldBoard();
 
-    expect(useUniverseStore.getState().mode).toBe("world");
+    expect(useUniverseStore.getState().mode).toBe("field-board");
     expect(useUniverseStore.getState().activeLensIds).toEqual([]);
     expect(useUniverseStore.getState().centeredId).toBe("field-tools");
+    expect(useUniverseStore.getState().fieldBoardReturnMode).toBe(
+      "snow-globe",
+    );
   });
 
   it("returns to the professional doorway without a latent convergence", () => {

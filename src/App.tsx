@@ -2,6 +2,7 @@ import { AnimatePresence } from "motion/react";
 import { useEffect } from "react";
 import { CvRoom } from "./components/CvRoom";
 import { DeveloperInspector } from "./components/DeveloperInspector";
+import { FieldBoardScene } from "./components/FieldBoardScene";
 import { GratitudeSequence } from "./components/GratitudeSequence";
 import { LivingMapScene } from "./components/LivingMapScene";
 import { SnowGlobeScene } from "./components/SnowGlobeScene";
@@ -59,6 +60,7 @@ export default function App() {
         {(mode === "sky" || mode === "world") && (
           <LivingMapScene key="map" />
         )}
+        {mode === "field-board" && <FieldBoardScene key="field-board" />}
         {mode === "convergence" && <GratitudeSequence key="convergence" />}
         {mode === "snow-globe" && <SnowGlobeScene key="snow-globe" />}
       </AnimatePresence>
