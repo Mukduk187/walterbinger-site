@@ -1,20 +1,38 @@
 # WalterBinger.com
 
-Practical placeholder for Walter Binger's professional site — built so LinkedIn and resumes have somewhere real to point while the full site is developed.
+Walter Binger's professional site and living map.
 
-## Files
+The public front door is a restrained professional profile. Its constellation
+mark opens a relative, lens-driven map of projects, places, writing, tools, and
+artifacts. The architecture is durable; the exhibition is intended to grow.
 
-- `index.html` — site content: name, bio, four proof highlights, contact.
-- `styles.css` — warm paper / black ink visual system (Fraunces + Work Sans).
-- `script.js` — copy-to-clipboard on the contact email.
-- `CNAME` — points GitHub Pages to `walterbinger.com`.
+## Local Development
 
-## The real project
+```bash
+pnpm install
+pnpm run dev
+```
 
-The full interactive build — a sparse star field where attention reveals flash-tattoo-style drawings, lens-based constellations, and navigable worlds — lives on the `cosmology-wip` branch, exactly as Codex left it, along with its full design canon (`docs/`), source archive (`archive/`), and prototype history (`drafts/`).
+The default local URL is `http://127.0.0.1:5173/`. The Codex working preview
+uses port `8765`.
 
-That build is intentionally not deployed yet: its own game plan marks the site-build phase as not started, pending an approved symbol registry and homepage blueprint. Resume work there from `cosmology-wip`; don't merge it into `main` until it's ready to replace this placeholder outright.
+## Verification
+
+```bash
+pnpm run check
+pnpm run test:e2e
+```
+
+`check` runs the domain/state tests and the production build. The Playwright
+suite covers the professional doorway, PREP resources, lens behavior, world
+travel, Gratitude convergence, and the Snow Globe on desktop and mobile.
 
 ## Publishing
 
-Deployed via GitHub Pages from `main`, repository root, custom domain `walterbinger.com`.
+GitHub Pages publishes the Vite `dist/` artifact from `main` through
+`.github/workflows/deploy.yml`. The production artifact includes the custom
+domain declaration for `walterbinger.com`.
+
+Current construction notes and visual records live in
+`docs/foundation-v0.1/`. Historical cosmology prototypes are preserved on the
+`cosmology-wip` branch.
