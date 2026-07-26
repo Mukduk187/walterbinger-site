@@ -39,7 +39,6 @@ interface LensInstrumentProps {
 export function LensInstrument({ onResetView }: LensInstrumentProps) {
   const activeLensIds = useUniverseStore((state) => state.activeLensIds);
   const toggleLens = useUniverseStore((state) => state.toggleLens);
-  const returnToCv = useUniverseStore((state) => state.returnToCv);
   const autoSpin = useUniverseStore((state) => state.autoSpin);
   const toggleAutoSpin = useUniverseStore((state) => state.toggleAutoSpin);
   const phenomena = resolvePhenomena(activeLensIds).filter(
@@ -65,10 +64,10 @@ export function LensInstrument({ onResetView }: LensInstrumentProps) {
   return (
     <aside className="lens-instrument" aria-label="Kaleidoscope lens instrument">
       <div className="instrument-actions">
-        <button type="button" onClick={returnToCv} title="Professional archive">
+        <a href="/" title="Professional archive">
           <Home aria-hidden="true" />
           <span className="sr-only">Professional archive</span>
-        </button>
+        </a>
         <button type="button" onClick={onResetView} title="Reset sky">
           <RotateCcw aria-hidden="true" />
           <span className="sr-only">Reset sky</span>

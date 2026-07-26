@@ -438,7 +438,9 @@ a:focus-visible,
 }
 
 .world-chrome button,
+.instrument-actions a,
 .instrument-actions button,
+.snow-globe-actions a,
 .snow-globe-actions button {
   display: grid;
   width: 40px;
@@ -449,7 +451,9 @@ a:focus-visible,
   border-radius: 50%;
   background: rgba(250, 247, 239, 0.82);
   cursor: pointer;
+  color: inherit;
   pointer-events: auto;
+  text-decoration: none;
   backdrop-filter: blur(8px);
 }
 
@@ -569,6 +573,7 @@ a:focus-visible,
   pointer-events: auto;
 }
 
+.instrument-actions a,
 .instrument-actions button {
   width: 34px;
   height: 34px;

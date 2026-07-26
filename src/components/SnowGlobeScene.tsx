@@ -11,7 +11,6 @@ export function SnowGlobeScene() {
     (state) => state.savedDiscoveryIds,
   );
   const saveCurrentTrip = useUniverseStore((state) => state.saveCurrentTrip);
-  const returnToCv = useUniverseStore((state) => state.returnToCv);
   const rebirth = useUniverseStore((state) => state.rebirth);
   const enterWorld = useUniverseStore((state) => state.enterWorld);
   const visibleDiscoveries = AUTHORED_BODIES.filter((body) =>
@@ -27,10 +26,10 @@ export function SnowGlobeScene() {
   return (
     <main className="snow-globe-world">
       <div className="snow-globe-actions">
-        <button type="button" onClick={returnToCv} title="Professional page">
+        <a href="/" title="Professional page">
           <ArrowLeft aria-hidden="true" />
           <span className="sr-only">Professional page</span>
-        </button>
+        </a>
         <button type="button" onClick={saveCurrentTrip} title="Save discoveries">
           <Save aria-hidden="true" />
           <span className="sr-only">Save discoveries</span>

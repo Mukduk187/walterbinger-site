@@ -25,7 +25,24 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v4
 
-      - name: Upload approved homepage
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build living map beneath approved homepage
+        run: pnpm run build
+
+      - name: Upload approved homepage and living map
         uses: actions/upload-pages-artifact@v3
         with:
           path: homepage

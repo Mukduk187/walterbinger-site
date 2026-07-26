@@ -149,7 +149,7 @@ export function BodyGlyph({
         style={style}
       >
         <image
-          href="/assets/source/empanadas-son/store-sun.png"
+          href={`${import.meta.env.BASE_URL}assets/source/empanadas-son/store-sun.png`}
           x="-43"
           y="-39"
           width="86"

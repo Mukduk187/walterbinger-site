@@ -5,6 +5,9 @@ import {
   type Vector3,
 } from "../domain/cosmology";
 
+const sourceAsset = (path: string) =>
+  `${import.meta.env.BASE_URL}assets/source/${path}`;
+
 function weights(
   red: number,
   orange: number,
@@ -195,27 +198,27 @@ export const AUTHORED_BODIES: readonly CelestialNode[] = [
       {
         id: "empanada-beef-burgundy",
         label: "Beef Burgundy menu drawing",
-        src: "/assets/source/empanadas-son/beef-burgundy.png",
+        src: sourceAsset("empanadas-son/beef-burgundy.png"),
       },
       {
         id: "empanada-verduras",
         label: "Verduras menu drawing",
-        src: "/assets/source/empanadas-son/verduras.png",
+        src: sourceAsset("empanadas-son/verduras.png"),
       },
       {
         id: "empanada-smores",
         label: "S'mores menu drawing",
-        src: "/assets/source/empanadas-son/smores.png",
+        src: sourceAsset("empanadas-son/smores.png"),
       },
       {
         id: "empanada-carne",
         label: "Carne menu drawing",
-        src: "/assets/source/empanadas-son/carne.png",
+        src: sourceAsset("empanadas-son/carne.png"),
       },
       {
         id: "empanada-apple-pie",
         label: "Apple pie menu drawing",
-        src: "/assets/source/empanadas-son/apple-pie.png",
+        src: sourceAsset("empanadas-son/apple-pie.png"),
       },
     ],
   }),
