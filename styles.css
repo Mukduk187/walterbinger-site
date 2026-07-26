@@ -1,0 +1,148 @@
+:root {
+  --paper: #faf6ee;
+  --ink: #23201b;
+  --ink-soft: #4a463e;
+  --magenta: #b3005c;
+  --rule: rgba(35, 32, 27, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Work Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 3rem;
+}
+
+.hero {
+  margin-bottom: 2.5rem;
+}
+
+.mark {
+  margin: 0 0 0.75rem;
+  color: var(--ink);
+}
+
+h1 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 2.4rem;
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.01em;
+}
+
+.tagline {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.bio {
+  margin-bottom: 2.75rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.bio p {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  max-width: 54ch;
+}
+
+.highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.highlight h2 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin: 0 0 0.15rem;
+}
+
+.highlight .role {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--magenta);
+}
+
+.highlight p:not(.role) {
+  margin: 0;
+  color: var(--ink-soft);
+  max-width: 58ch;
+}
+
+.contact {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.contact h2 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+
+.contact-links {
+  font-size: 1.05rem;
+}
+
+.contact-links a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--magenta);
+}
+
+.contact-links a:hover,
+.contact-links a:focus-visible {
+  color: var(--magenta);
+}
+
+.contact-links .divider {
+  margin: 0 0.6em;
+  color: var(--rule);
+}
+
+footer {
+  margin-top: 3.5rem;
+}
+
+footer p {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  opacity: 0.75;
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 3rem 1.25rem 2.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+}
