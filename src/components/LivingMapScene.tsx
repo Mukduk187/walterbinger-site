@@ -11,6 +11,8 @@ import {
 import { ArrowLeft, Expand } from "lucide-react";
 import { ALL_BODIES, AUTHORED_BODIES } from "../data/bodies";
 import {
+  LENSES,
+  LENS_IDS,
   lensRelevance,
   mixLensColors,
   type CelestialNode,
@@ -81,6 +83,40 @@ const RELATIONSHIPS = AUTHORED_BODIES.flatMap((node) =>
       to: relatedId,
     })),
 );
+
+function dominantLensId(node: CelestialNode): LensId {
+  return LENS_IDS.reduce((strongest, lensId) =>
+    node.lensWeights[lensId] > node.lensWeights[strongest]
+      ? lensId
+      : strongest,
+  );
+}
+
+function lensColor(lensId: LensId): string {
+  return LENSES.find((lens) => lens.id === lensId)?.color ?? "#171717";
+}
+
+function relationshipAffinity(
+  from: CelestialNode,
+  to: CelestialNode,
+): number {
+  let dot = 0;
+  let fromMagnitude = 0;
+  let toMagnitude = 0;
+
+  for (const lensId of LENS_IDS) {
+    const fromWeight = from.lensWeights[lensId];
+    const toWeight = to.lensWeights[lensId];
+    dot += fromWeight * toWeight;
+    fromMagnitude += fromWeight * fromWeight;
+    toMagnitude += toWeight * toWeight;
+  }
+
+  const similarity =
+    dot / (Math.sqrt(fromMagnitude) * Math.sqrt(toMagnitude) || 1);
+  const importance = (from.importance + to.importance) / 2;
+  return clamp(0.18 + similarity * 0.5 + importance * 0.32, 0, 1);
+}
 
 const INITIAL_CAMERA: CameraState = {
   yaw: -0.18,
@@ -252,6 +288,7 @@ export function LivingMapScene({
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const nodeRefs = useRef(new Map<string, SVGGElement>());
+  const nebulaRefs = useRef(new Map<string, SVGCircleElement>());
   const relationRefs = useRef(new Map<string, SVGPathElement>());
   const previewRef = useRef<HTMLButtonElement>(null);
   const camera = useRef<CameraState>({ ...INITIAL_CAMERA });
@@ -291,6 +328,74 @@ export function LivingMapScene({
   const centeredNode = useMemo(
     () => ALL_BODIES.find((node) => node.id === centeredId) ?? null,
     [centeredId],
+  );
+  const attentionIds = useMemo(() => {
+    const ids = new Set(pinnedIds);
+    if (hoveredId) {
+      ids.add(hoveredId);
+    }
+    if (centeredId) {
+      ids.add(centeredId);
+    }
+    return ids;
+  }, [centeredId, hoveredId, pinnedIds]);
+  const awakenedNodeIds = useMemo(() => {
+    const ids = new Set(attentionIds);
+
+    for (const node of AUTHORED_BODIES) {
+      if (
+        attentionIds.has(node.id) ||
+        node.relatedNodeIds.some((relatedId) => attentionIds.has(relatedId))
+      ) {
+        ids.add(node.id);
+      }
+      if (
+        activeLensIds.length > 0 &&
+        lensRelevance(node, activeLensIds) > 0.54
+      ) {
+        ids.add(node.id);
+      }
+    }
+
+    return ids;
+  }, [activeLensIds, attentionIds]);
+  const relationshipStates = useMemo(
+    () =>
+      RELATIONSHIPS.map((relationship) => {
+        const from = AUTHORED_BODIES.find(
+          (node) => node.id === relationship.from,
+        );
+        const to = AUTHORED_BODIES.find(
+          (node) => node.id === relationship.to,
+        );
+        if (!from || !to) {
+          return null;
+        }
+
+        const spectralMatch =
+          activeLensIds.length > 0 &&
+          lensRelevance(from, activeLensIds) > 0.54 &&
+          lensRelevance(to, activeLensIds) > 0.54;
+        const attentionMatch =
+          attentionIds.size > 0 &&
+          awakenedNodeIds.has(from.id) &&
+          awakenedNodeIds.has(to.id);
+        const fromLens = dominantLensId(from);
+        const toLens = dominantLensId(to);
+        const colors =
+          activeLensIds.length > 0
+            ? activeLensIds.map(lensColor)
+            : [lensColor(fromLens), lensColor(toLens)];
+
+        return {
+          ...relationship,
+          active: spectralMatch || attentionMatch,
+          affinity: relationshipAffinity(from, to),
+          bridge: fromLens !== toLens,
+          colors,
+        };
+      }).filter((relationship) => relationship !== null),
+    [activeLensIds, attentionIds, awakenedNodeIds],
   );
 
   useEffect(() => {
@@ -468,6 +573,21 @@ export function LivingMapScene({
         );
         element.style.opacity = String(clamp(visibleOpacity, 0, 1));
         element.style.setProperty("--depth", body.projected.depth.toFixed(2));
+
+        const nebula = nebulaRefs.current.get(node.id);
+        if (nebula) {
+          const radius = clamp(
+            82 * body.projected.scale * (0.78 + node.importance * 0.38),
+            46,
+            154,
+          );
+          nebula.setAttribute("cx", body.projected.x.toFixed(2));
+          nebula.setAttribute("cy", body.projected.y.toFixed(2));
+          nebula.setAttribute("r", radius.toFixed(2));
+          nebula.style.visibility = body.projected.visible
+            ? "visible"
+            : "hidden";
+        }
       }
 
       for (const relation of RELATIONSHIPS) {
@@ -694,32 +814,76 @@ export function LivingMapScene({
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          <filter
+            id="nebula-wash"
+            x="-70%"
+            y="-70%"
+            width="240%"
+            height="240%"
+          >
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.012"
+              numOctaves="3"
+              seed="31"
+              result="wash-noise"
+            />
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="wash-noise"
+              scale="18"
+              xChannelSelector="R"
+              yChannelSelector="G"
+              result="wobbled-wash"
+            />
+            <feGaussianBlur in="wobbled-wash" stdDeviation="18" />
+          </filter>
+          {relationshipStates.map((relationship) => (
+            <linearGradient
+              key={`gradient-${relationship.id}`}
+              id={`relationship-gradient-${relationship.id}`}
+            >
+              {relationship.colors.map((color, index) => (
+                <stop
+                  key={`${relationship.id}-${color}-${index}`}
+                  offset={`${(index / Math.max(1, relationship.colors.length - 1)) * 100}%`}
+                  stopColor={color}
+                />
+              ))}
+            </linearGradient>
+          ))}
         </defs>
 
-        <g className="relationship-layer" aria-hidden="true">
-          {RELATIONSHIPS.map((relationship) => {
-            const from = AUTHORED_BODIES.find(
-              (node) => node.id === relationship.from,
-            );
-            const to = AUTHORED_BODIES.find(
-              (node) => node.id === relationship.to,
-            );
-            const relationshipWeight =
-              from && to && activeLensIds.length > 0
-                ? (lensRelevance(from, activeLensIds) +
-                    lensRelevance(to, activeLensIds)) /
-                  2
-                : 0.58;
-            const active =
-              Boolean(from && to) &&
-              (pinnedIds.includes(relationship.from) ||
-                pinnedIds.includes(relationship.to) ||
-                (activeLensIds.length > 0 &&
-                  lensRelevance(from!, activeLensIds) > 0.54 &&
-                  lensRelevance(to!, activeLensIds) > 0.54));
+        <g className="nebula-layer" aria-hidden="true">
+          {AUTHORED_BODIES.map((node) => {
+            const awakened = awakenedNodeIds.has(node.id);
+            const color =
+              activeLensIds.length > 0 &&
+              lensRelevance(node, activeLensIds) > 0.54
+                ? activeColor
+                : lensColor(dominantLensId(node));
             return (
+              <circle
+                key={`nebula-${node.id}`}
+                ref={(element) => {
+                  if (element) {
+                    nebulaRefs.current.set(node.id, element);
+                  } else {
+                    nebulaRefs.current.delete(node.id);
+                  }
+                }}
+                className={`relationship-nebula${awakened ? " is-awake" : ""}${attentionIds.has(node.id) ? " is-attended" : ""}`}
+                style={{ "--nebula-color": color } as CSSProperties}
+              />
+            );
+          })}
+        </g>
+
+        <g className="relationship-layer" aria-hidden="true">
+          {relationshipStates.map((relationship, relationshipIndex) => (
+            <g key={relationship.id}>
               <path
-                key={relationship.id}
+                id={`relationship-${relationship.id}`}
                 ref={(element) => {
                   if (element) {
                     relationRefs.current.set(relationship.id, element);
@@ -727,16 +891,41 @@ export function LivingMapScene({
                     relationRefs.current.delete(relationship.id);
                   }
                 }}
-                className={`relationship-path${active ? " is-visible" : ""}`}
+                className={`relationship-path${relationship.active ? " is-visible" : ""}${relationship.bridge ? " is-bridge" : ""}`}
                 style={
                   {
-                    "--relationship-color": activeColor,
-                    "--relationship-weight": relationshipWeight,
+                    stroke: `url(#relationship-gradient-${relationship.id})`,
+                    "--relationship-color":
+                      relationship.colors[relationship.colors.length - 1],
+                    "--relationship-weight": relationship.affinity,
                   } as CSSProperties
                 }
               />
-            );
-          })}
+              {Array.from({ length: 2 }, (_, particleIndex) => (
+                <circle
+                  key={`${relationship.id}-particle-${particleIndex}`}
+                  className={`relationship-particle${relationship.active ? " is-visible" : ""}`}
+                  r={particleIndex === 0 ? 1.8 : 1.15}
+                  style={{
+                    fill: relationship.colors[
+                      (particleIndex + relationshipIndex) %
+                        relationship.colors.length
+                    ],
+                  }}
+                >
+                  {!reducedMotion && (
+                    <animateMotion
+                      dur={`${7.5 + (relationshipIndex % 5) * 0.8}s`}
+                      begin={`${-(relationshipIndex * 0.47 + particleIndex * 3.1)}s`}
+                      repeatCount="indefinite"
+                    >
+                      <mpath href={`#relationship-${relationship.id}`} />
+                    </animateMotion>
+                  )}
+                </circle>
+              ))}
+            </g>
+          ))}
         </g>
 
         <g className="mycelium-layer" aria-hidden="true">
@@ -770,7 +959,7 @@ export function LivingMapScene({
                     nodeRefs.current.delete(node.id);
                   }
                 }}
-                className={`celestial-body tier-${node.tier} state-${node.state}${relevant ? " is-relevant" : ""}${isPinned ? " is-pinned" : ""}${isHovered ? " is-hovered" : ""}${isCentered ? " is-centered" : ""}`}
+                className={`celestial-body tier-${node.tier} state-${node.state}${relevant ? " is-relevant" : ""}${awakenedNodeIds.has(node.id) ? " is-awake" : ""}${isPinned ? " is-pinned" : ""}${isHovered ? " is-hovered" : ""}${isCentered ? " is-centered" : ""}`}
                 data-node-id={node.id}
                 data-authored={node.tier === "authored" ? "true" : undefined}
                 data-inspectable={interactive ? "true" : "false"}

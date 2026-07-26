@@ -92,9 +92,11 @@ function navigateHash(path: string): void {
 }
 
 const initialPersistence = readPersistence();
+const initialMode: AppMode =
+  typeof window !== "undefined" && window.location.hash === "" ? "sky" : "cv";
 
 export const useUniverseStore = create<UniverseState>((set, get) => ({
-  mode: "cv",
+  mode: initialMode,
   activeLensIds: [],
   pinnedIds: [],
   hoveredId: null,
@@ -243,7 +245,11 @@ export function hydrateRouteFromHash(): void {
     useUniverseStore.setState({ mode: "snow-globe" });
     return;
   }
-  if (hash === "/" || hash === "") {
+  if (hash === "") {
+    useUniverseStore.setState({ mode: "sky" });
+    return;
+  }
+  if (hash === "/") {
     useUniverseStore.setState({ mode: "cv" });
     return;
   }

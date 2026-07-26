@@ -389,6 +389,26 @@ a:focus-visible,
   transform-origin: center;
 }
 
+.nebula-layer,
+.relationship-layer {
+  pointer-events: none;
+}
+
+.relationship-nebula {
+  fill: var(--nebula-color);
+  filter: url("#nebula-wash");
+  opacity: 0;
+  transition: opacity 520ms ease;
+}
+
+.relationship-nebula.is-awake {
+  opacity: 0.075;
+}
+
+.relationship-nebula.is-attended {
+  opacity: 0.14;
+}
+
 .relationship-path {
   fill: none;
   stroke: transparent;
@@ -400,12 +420,25 @@ a:focus-visible,
 }
 
 .relationship-path.is-visible {
-  stroke: var(--relationship-color, var(--ink));
-  stroke-dasharray: 1.6 7;
   stroke-width: calc(0.45px + (var(--relationship-weight, 0.58) * 1.1px));
   opacity: calc(0.22 + (var(--relationship-weight, 0.58) * 0.44));
-  animation: relationship-flow 5.2s linear infinite;
   filter: drop-shadow(0 0 1.5px color-mix(in srgb, var(--relationship-color) 32%, transparent));
+}
+
+.relationship-path.is-visible.is-bridge {
+  stroke-dasharray: 2 7;
+  animation: relationship-flow 6.8s linear infinite;
+}
+
+.relationship-particle {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 420ms ease;
+}
+
+.relationship-particle.is-visible {
+  opacity: 0.78;
+  filter: drop-shadow(0 0 2px currentColor);
 }
 
 .artifact-orbit {
