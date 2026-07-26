@@ -1,6 +1,6 @@
 import type { CSSProperties, KeyboardEvent } from "react";
 import { motion } from "motion/react";
-import { Home, RotateCcw } from "lucide-react";
+import { Home, Pause, Play, RotateCcw } from "lucide-react";
 import {
   LENSES,
   mixLensColors,
@@ -40,6 +40,8 @@ export function LensInstrument({ onResetView }: LensInstrumentProps) {
   const activeLensIds = useUniverseStore((state) => state.activeLensIds);
   const toggleLens = useUniverseStore((state) => state.toggleLens);
   const returnToCv = useUniverseStore((state) => state.returnToCv);
+  const autoSpin = useUniverseStore((state) => state.autoSpin);
+  const toggleAutoSpin = useUniverseStore((state) => state.toggleAutoSpin);
   const phenomena = resolvePhenomena(activeLensIds).filter(
     (phenomenon) => phenomenon.status === "locked",
   );
@@ -70,6 +72,17 @@ export function LensInstrument({ onResetView }: LensInstrumentProps) {
         <button type="button" onClick={onResetView} title="Reset sky">
           <RotateCcw aria-hidden="true" />
           <span className="sr-only">Reset sky</span>
+        </button>
+        <button
+          type="button"
+          onClick={toggleAutoSpin}
+          aria-pressed={autoSpin}
+          title={autoSpin ? "Pause drift" : "Auto-spin"}
+        >
+          {autoSpin ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
+          <span className="sr-only">
+            {autoSpin ? "Pause universe drift" : "Resume universe drift"}
+          </span>
         </button>
       </div>
 

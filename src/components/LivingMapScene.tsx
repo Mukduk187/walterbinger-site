@@ -246,6 +246,7 @@ export function LivingMapScene({
   const setSelected = useUniverseStore((state) => state.setSelected);
   const enterWorld = useUniverseStore((state) => state.enterWorld);
   const returnToSky = useUniverseStore((state) => state.returnToSky);
+  const autoSpin = useUniverseStore((state) => state.autoSpin);
   const reducedMotion = useReducedMotion();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -368,12 +369,14 @@ export function LivingMapScene({
       const cameraEase = reducedMotion ? 0.18 : 1 - Math.pow(0.82, delta / 16.67);
 
       if (
+        autoSpin &&
         !reducedMotion &&
         !isDragging.current &&
-        time - lastInteractionAt.current > 1800 &&
+        mode === "sky" &&
+        time - lastInteractionAt.current > 900 &&
         gratitudePhase === "idle"
       ) {
-        cameraTarget.current.yaw += delta * 0.000018;
+        cameraTarget.current.yaw += delta * 0.00006;
       }
 
       cameraTarget.current.pitch = clamp(
@@ -479,7 +482,7 @@ export function LivingMapScene({
         const dx = to.x - from.x;
         const dy = to.y - from.y;
         const length = Math.hypot(dx, dy) || 1;
-        const bow = clamp(length * 0.11, 18, 88);
+        const bow = clamp(length * 0.17, 28, 130);
         const controlX = midpointX - (dy / length) * bow;
         const controlY = midpointY + (dx / length) * bow;
         path.setAttribute(
@@ -514,9 +517,11 @@ export function LivingMapScene({
     return () => cancelAnimationFrame(frame);
   }, [
     activeLensIds,
+    autoSpin,
     centeredId,
     gratitudePhase,
     hoveredId,
+    mode,
     pinnedIds,
     reducedMotion,
     selectedId,

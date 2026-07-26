@@ -393,7 +393,7 @@ a:focus-visible,
   fill: none;
   stroke: transparent;
   stroke-linecap: round;
-  stroke-width: 1.2;
+  stroke-width: 0.75;
   opacity: 0;
   transition: opacity 280ms ease, stroke 280ms ease;
   vector-effect: non-scaling-stroke;
@@ -401,11 +401,11 @@ a:focus-visible,
 
 .relationship-path.is-visible {
   stroke: var(--relationship-color, var(--ink));
-  stroke-dasharray: 2 7;
-  stroke-width: calc(0.8px + (var(--relationship-weight, 0.58) * 2.2px));
-  opacity: calc(0.26 + (var(--relationship-weight, 0.58) * 0.52));
+  stroke-dasharray: 1.6 7;
+  stroke-width: calc(0.45px + (var(--relationship-weight, 0.58) * 1.1px));
+  opacity: calc(0.22 + (var(--relationship-weight, 0.58) * 0.44));
   animation: relationship-flow 5.2s linear infinite;
-  filter: drop-shadow(0 0 2px color-mix(in srgb, var(--relationship-color) 38%, transparent));
+  filter: drop-shadow(0 0 1.5px color-mix(in srgb, var(--relationship-color) 32%, transparent));
 }
 
 .artifact-orbit {

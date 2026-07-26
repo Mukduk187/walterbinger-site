@@ -18,6 +18,7 @@ const persistedSchema = z.object({
   savedDiscoveryIds: z.array(z.string()).max(512),
   lastVisitedAt: z.string().optional(),
   reducedMotionOverride: z.boolean().nullable().optional(),
+  autoSpin: z.boolean().optional(),
 });
 
 type PersistedUniverse = z.infer<typeof persistedSchema>;
@@ -59,6 +60,7 @@ interface UniverseState {
   currentTripDiscoveryIds: string[];
   savedDiscoveryIds: string[];
   reducedMotionOverride: boolean | null;
+  autoSpin: boolean;
   debugOpen: boolean;
   enterSky: () => void;
   enterWorld: (id: string) => void;
@@ -75,6 +77,7 @@ interface UniverseState {
   setCentered: (id: string | null) => void;
   saveCurrentTrip: () => void;
   setReducedMotionOverride: (value: boolean | null) => void;
+  toggleAutoSpin: () => void;
   toggleDebug: () => void;
 }
 
@@ -100,6 +103,7 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
   currentTripDiscoveryIds: [],
   savedDiscoveryIds: initialPersistence.savedDiscoveryIds,
   reducedMotionOverride: initialPersistence.reducedMotionOverride ?? null,
+  autoSpin: initialPersistence.autoSpin ?? true,
   debugOpen: false,
   enterSky: () => {
     navigateHash("/sky");
@@ -186,6 +190,7 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
       savedDiscoveryIds,
       lastVisitedAt: new Date().toISOString(),
       reducedMotionOverride: get().reducedMotionOverride,
+      autoSpin: get().autoSpin,
     });
     set({ savedDiscoveryIds });
   },
@@ -195,8 +200,20 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
       savedDiscoveryIds: get().savedDiscoveryIds,
       lastVisitedAt: new Date().toISOString(),
       reducedMotionOverride: value,
+      autoSpin: get().autoSpin,
     });
     set({ reducedMotionOverride: value });
+  },
+  toggleAutoSpin: () => {
+    const autoSpin = !get().autoSpin;
+    writePersistence({
+      version: 1,
+      savedDiscoveryIds: get().savedDiscoveryIds,
+      lastVisitedAt: new Date().toISOString(),
+      reducedMotionOverride: get().reducedMotionOverride,
+      autoSpin,
+    });
+    set({ autoSpin });
   },
   toggleDebug: () => set((state) => ({ debugOpen: !state.debugOpen })),
 }));
