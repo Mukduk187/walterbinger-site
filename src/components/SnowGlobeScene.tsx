@@ -13,7 +13,7 @@ export function SnowGlobeScene() {
   const saveCurrentTrip = useUniverseStore((state) => state.saveCurrentTrip);
   const returnToCv = useUniverseStore((state) => state.returnToCv);
   const rebirth = useUniverseStore((state) => state.rebirth);
-  const enterFieldBoard = useUniverseStore((state) => state.enterFieldBoard);
+  const enterWorld = useUniverseStore((state) => state.enterWorld);
   const visibleDiscoveries = AUTHORED_BODIES.filter((body) =>
     [...new Set([...savedDiscoveries, ...discoveries])].includes(body.id),
   );
@@ -69,13 +69,7 @@ export function SnowGlobeScene() {
                     left: `${50 + Math.cos(angle) * radius}%`,
                     top: `${48 + Math.sin(angle) * radius * 0.52}%`,
                   }}
-                  onClick={() => {
-                    if (body.id === "field-tools") {
-                      enterFieldBoard();
-                    } else {
-                      useUniverseStore.getState().enterWorld(body.id);
-                    }
-                  }}
+                  onClick={() => enterWorld(body.id)}
                   title={body.publicLabel}
                   aria-label={`Return to ${body.publicLabel}`}
                 >

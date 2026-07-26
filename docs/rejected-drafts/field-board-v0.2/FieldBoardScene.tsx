@@ -1,3 +1,4 @@
+// Rejected draft retained for reference. This is not an authored PREP/PERP surface.
 import { motion } from "motion/react";
 import {
   Archive,

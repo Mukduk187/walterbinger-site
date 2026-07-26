@@ -27,7 +27,7 @@ const highlights = [
 
 export function CvRoom() {
   const enterSky = useUniverseStore((state) => state.enterSky);
-  const enterFieldBoard = useUniverseStore((state) => state.enterFieldBoard);
+  const enterWorld = useUniverseStore((state) => state.enterWorld);
   const [emailCopied, setEmailCopied] = useState(false);
 
   const copyEmail = async () => {
@@ -115,7 +115,7 @@ export function CvRoom() {
             </a>
           </p>
           <p className="tool-link">
-            <button type="button" onClick={enterFieldBoard}>
+            <button type="button" onClick={() => enterWorld("field-tools")}>
               PREP / PERP Field Tools
             </button>
           </p>

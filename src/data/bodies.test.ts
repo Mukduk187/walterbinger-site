@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { ALL_BODIES, AUTHORED_BODIES } from "./bodies";
 import { validateBidirectionalRelationships } from "../domain/cosmology";
+import { ALL_BODIES, AUTHORED_BODIES } from "./bodies";
+import { getWorldContent } from "./worldContent";
 
 describe("authored universe registry", () => {
   it("contains durable depth without publishing unfinished objects", () => {
@@ -17,11 +18,17 @@ describe("authored universe registry", () => {
     expect(validateBidirectionalRelationships(AUTHORED_BODIES)).toEqual([]);
   });
 
-  it("registers PREP 07 as the primary field-tool artifact", () => {
-    const tools = AUTHORED_BODIES.find((body) => body.id === "field-tools");
-    expect(tools?.resources?.at(0)).toMatchObject({
-      id: "prep-07-learning-huddle",
+  it("keeps PREP content separate from the universe topology", () => {
+    const content = getWorldContent("field-tools");
+    expect(content?.resources.at(0)).toMatchObject({
+      id: "prep-complete-field-kit",
       kind: "tool",
     });
+    expect(content?.slots).toContainEqual(
+      expect.objectContaining({
+        id: "prep-perp-interactive",
+        status: "curation-needed",
+      }),
+    );
   });
 });

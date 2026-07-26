@@ -11,7 +11,9 @@ const lenses = [
   "Exploration & Faith",
 ] as const;
 
-test("professional doorway opens the PREP field kit", async ({ page }) => {
+test("professional doorway opens the source-linked PREP world", async ({
+  page,
+}) => {
   await page.goto("/");
 
   await expect(
@@ -21,30 +23,23 @@ test("professional doorway opens the PREP field kit", async ({ page }) => {
     .getByRole("button", { name: "PREP / PERP Field Tools", exact: true })
     .dispatchEvent("click");
 
-  await expect(page).toHaveURL(/#\/field-board$/);
+  await expect(page).toHaveURL(/#\/world\/field-tools$/);
   await expect(
     page.getByRole("heading", {
-      name: "Field Cards",
+      name: "PREP / PERP Field Tools",
       exact: true,
     }),
   ).toBeVisible();
   await expect(
-    page.locator(".field-board-card-grid .field-board-card"),
-  ).toHaveCount(9);
-  await expect(page.locator(".field-board-node")).toHaveCount(9);
-
-  await page
-    .getByRole("button", { name: "Supporting documents", exact: true })
-    .dispatchEvent("click");
-  await expect(
     page.getByRole("link", {
-      name: "PREP 07 — Five-Minute Learning Huddle",
+      name: "PREP Beta 1.0 — Complete Field Kit",
       exact: true,
     }),
   ).toHaveAttribute(
     "href",
-    "https://docs.google.com/document/d/1QXvMKMcMz_hb1AcOlsMiotSYD75QK8_o1iaQwXQD3DU/edit",
+    "https://docs.google.com/document/d/1d6e135C203qSSBP1gL6vJCGL4j3gItdRGcOuE9wJ1ok/edit",
   );
+  await expect(page.locator(".world-resources a")).toHaveCount(5);
 });
 
 test("lenses redraw relationships and a world can be entered", async ({
@@ -80,7 +75,7 @@ test("lenses redraw relationships and a world can be entered", async ({
   ).toHaveCount(5);
 });
 
-test("the field-tools star opens the interactive board and returns to the sky", async ({
+test("the field-tools star opens its expandable world and returns to the sky", async ({
   page,
 }) => {
   await page.goto("/#/sky");
@@ -92,13 +87,16 @@ test("the field-tools star opens the interactive board and returns to the sky", 
     })
     .dispatchEvent("dblclick");
 
-  await expect(page).toHaveURL(/#\/field-board$/);
+  await expect(page).toHaveURL(/#\/world\/field-tools$/);
   await expect(
-    page.getByRole("heading", { name: "Field Cards", exact: true }),
+    page.getByRole("heading", {
+      name: "PREP / PERP Field Tools",
+      exact: true,
+    }),
   ).toBeVisible();
 
   await page
-    .getByRole("button", { name: "Leave field board", exact: true })
+    .getByRole("button", { name: "Return to the sky", exact: true })
     .dispatchEvent("click");
   await expect(page).toHaveURL(/#\/sky$/);
 });
@@ -125,7 +123,7 @@ test("all spectra converge into the Snow Globe", async ({ page }) => {
       exact: true,
     })
     .dispatchEvent("click");
-  await expect(page).toHaveURL(/#\/field-board$/);
+  await expect(page).toHaveURL(/#\/world\/field-tools$/);
   await expect(
     page.locator('.lens-control[aria-pressed="true"]'),
   ).toHaveCount(0);

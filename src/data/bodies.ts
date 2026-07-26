@@ -31,7 +31,6 @@ interface AuthoredBodyInput {
   relatedNodeIds: string[];
   motionClass: CelestialNode["motionClass"];
   artifacts?: CelestialNode["artifacts"];
-  resources?: CelestialNode["resources"];
 }
 
 function authoredBody(input: AuthoredBodyInput): CelestialNode {
@@ -56,7 +55,6 @@ function authoredBody(input: AuthoredBodyInput): CelestialNode {
     constellationIds: [],
     mysteryTags: [],
     artifacts: input.artifacts,
-    resources: input.resources,
   };
 }
 
@@ -162,44 +160,6 @@ export const AUTHORED_BODIES: readonly CelestialNode[] = [
     glyphKey: "field-tools",
     relatedNodeIds: ["healthcare", "thinking-in-4d", "library-writing"],
     motionClass: "stable",
-    resources: [
-      {
-        id: "prep-07-learning-huddle",
-        label: "PREP 07 — Five-Minute Learning Huddle",
-        kind: "tool",
-        href: "https://docs.google.com/document/d/1QXvMKMcMz_hb1AcOlsMiotSYD75QK8_o1iaQwXQD3DU/edit",
-        description:
-          "The preferred field-card version: a quick team conversation that turns a recurring problem into learning and repair.",
-        external: true,
-      },
-      {
-        id: "prep-field-signal-card",
-        label: "PREP 03 — Field Signal Card",
-        kind: "tool",
-        href: "https://docs.google.com/document/d/1yQjoe7EYyoUpJSZe82aTBbluI3vHvv_LRHfsnDFqaDM/edit",
-        description:
-          "A first diagnostic step for naming the system signal without defaulting to blame.",
-        external: true,
-      },
-      {
-        id: "prep-field-kit-index",
-        label: "PREP Field Kit Index",
-        kind: "document",
-        href: "https://docs.google.com/document/d/1wWU8TSpv7mG9C6XPFlnSqSwO2avXUJeZyklkAer7G9M/edit",
-        description:
-          "The source map for the complete family of field cards and supporting tools.",
-        external: true,
-      },
-      {
-        id: "prep-perp-architecture",
-        label: "PREP / PERP Closed-Circuit Architecture",
-        kind: "document",
-        href: "https://docs.google.com/document/d/1R4UZj36SiO1VrYy0qd3WVEMwGDayOnh8XmtzLThBKoM/edit",
-        description:
-          "The translation layer between field learning and executive response.",
-        external: true,
-      },
-    ],
   }),
   authoredBody({
     id: "thinking-in-4d",
@@ -218,16 +178,6 @@ export const AUTHORED_BODIES: readonly CelestialNode[] = [
       "field-tools",
     ],
     motionClass: "warp",
-    resources: [
-      {
-        id: "thinking-in-4d-note",
-        label: "Thinking in 4D",
-        kind: "writing",
-        href: "#/world/thinking-in-4d",
-        description:
-          "Working notes on perspective, systems, and what changes when the observer moves.",
-      },
-    ],
   }),
   authoredBody({
     id: "empanadas-son",
@@ -286,16 +236,6 @@ export const AUTHORED_BODIES: readonly CelestialNode[] = [
       "field-tools",
     ],
     motionClass: "stable",
-    resources: [
-      {
-        id: "cosmology-living-master",
-        label: "Cosmology & Design Bible — Living Master",
-        kind: "writing",
-        href: "https://docs.google.com/document/d/1lBfT_3gdxaKCt6-fOLVdUgSzFq8Zmh9ZsK4G8WLPis0/edit",
-        description: "The living construction record for this universe.",
-        external: true,
-      },
-    ],
   }),
   authoredBody({
     id: "listening-room",

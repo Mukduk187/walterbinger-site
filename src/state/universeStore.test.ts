@@ -13,23 +13,22 @@ describe("universe transitions", () => {
       selectedId: null,
       centeredId: null,
       currentTripDiscoveryIds: [],
-      fieldBoardReturnMode: "cv",
     });
   });
 
-  it("clears the converged spectrum when returning from the Snow Globe", () => {
+  it("clears the converged spectrum when entering a world from the Snow Globe", () => {
     useUniverseStore.setState({
       mode: "snow-globe",
       activeLensIds: [...LENS_IDS],
     });
 
-    useUniverseStore.getState().enterFieldBoard();
+    useUniverseStore.getState().enterWorld("field-tools");
 
-    expect(useUniverseStore.getState().mode).toBe("field-board");
+    expect(useUniverseStore.getState().mode).toBe("world");
     expect(useUniverseStore.getState().activeLensIds).toEqual([]);
     expect(useUniverseStore.getState().centeredId).toBe("field-tools");
-    expect(useUniverseStore.getState().fieldBoardReturnMode).toBe(
-      "snow-globe",
+    expect(useUniverseStore.getState().currentTripDiscoveryIds).toContain(
+      "field-tools",
     );
   });
 

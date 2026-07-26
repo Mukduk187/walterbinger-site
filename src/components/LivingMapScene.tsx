@@ -245,7 +245,6 @@ export function LivingMapScene({
   const setHovered = useUniverseStore((state) => state.setHovered);
   const setSelected = useUniverseStore((state) => state.setSelected);
   const enterWorld = useUniverseStore((state) => state.enterWorld);
-  const enterFieldBoard = useUniverseStore((state) => state.enterFieldBoard);
   const returnToSky = useUniverseStore((state) => state.returnToSky);
   const reducedMotion = useReducedMotion();
 
@@ -637,19 +636,11 @@ export function LivingMapScene({
     }
     if (event.key === "Enter" && node.inspectable) {
       event.preventDefault();
-      if (node.id === "field-tools") {
-        enterFieldBoard();
-      } else {
-        enterWorld(node.id);
-      }
+      enterWorld(node.id);
     }
   };
 
   const exploreNode = (node: CelestialNode) => {
-    if (node.id === "field-tools") {
-      enterFieldBoard();
-      return;
-    }
     enterWorld(node.id);
   };
 

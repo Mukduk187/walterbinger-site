@@ -120,15 +120,6 @@ export interface ArtifactReference {
   src: string;
 }
 
-export interface ResourceReference {
-  id: string;
-  label: string;
-  kind: "writing" | "tool" | "document" | "link";
-  href: string;
-  description?: string;
-  external?: boolean;
-}
-
 export interface CelestialNode {
   id: string;
   kind: NodeKind;
@@ -150,7 +141,6 @@ export interface CelestialNode {
   constellationIds: string[];
   mysteryTags: string[];
   artifacts?: ArtifactReference[];
-  resources?: ResourceReference[];
 }
 
 export interface QuartetAddress {

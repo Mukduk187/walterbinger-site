@@ -1,11 +1,23 @@
-# Field Board Integration v0.2
+# Field Board Integration v0.2 — Rejected Draft
 
-This draft corrects the PREP/PERP destination.
+## Status
+
+This draft is preserved for comparison only and is no longer part of the live
+runtime. The local `/Users/WALtron/Documents/PERP` application was incorrectly
+treated as the source of truth. It has not been verified as Walter's remembered
+PREP / PERP prototype.
+
+The source code has been archived under
+`docs/rejected-drafts/field-board-v0.2/`. The website now uses the shared world
+shell and links to verified authored material while the real PREP / PERP
+interface is developed separately.
+
+## Original Draft Notes
 
 ## Source of truth
 
-The recovered local application at `/Users/WALtron/Documents/PERP` is the
-visual and interaction reference. Its own product rule is preserved:
+The draft had assumed the recovered local application at
+`/Users/WALtron/Documents/PERP` was the visual and interaction reference:
 
 ```text
 raw material -> field cards -> constellation/blackout board -> artifact
@@ -18,7 +30,7 @@ The protocol documents support the board. They do not replace it.
 - Professional page -> PREP / PERP Field Tools
 - Field-tools star -> double-click or Explore
 - Snow Globe -> field-tools memory
-- Direct route -> `#/field-board`
+- Direct route -> `#/field-board` (removed from the live router)
 
 ## Preserved behavior
 

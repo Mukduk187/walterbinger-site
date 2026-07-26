@@ -1,5 +1,7 @@
 import { ArrowUpRight, BookOpen, FileText, Wrench } from "lucide-react";
-import type { CelestialNode, ResourceReference } from "../domain/cosmology";
+import { getWorldContent } from "../data/worldContent";
+import type { ResourceReference } from "../domain/content";
+import type { CelestialNode } from "../domain/cosmology";
 
 const iconByKind: Record<ResourceReference["kind"], typeof FileText> = {
   writing: BookOpen,
@@ -9,13 +11,15 @@ const iconByKind: Record<ResourceReference["kind"], typeof FileText> = {
 };
 
 export function WorldResources({ node }: { node: CelestialNode }) {
-  if (!node.resources?.length) {
+  const content = getWorldContent(node.id);
+
+  if (!content?.resources.length) {
     return null;
   }
 
   return (
     <nav className="world-resources" aria-label={`${node.publicLabel} resources`}>
-      {node.resources.map((resource) => {
+      {content.resources.map((resource) => {
         const Icon = iconByKind[resource.kind];
         return (
           <a
