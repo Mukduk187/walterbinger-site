@@ -20,6 +20,11 @@ import {
   type Vector3,
 } from "../domain/cosmology";
 import {
+  HEALTHCARE_SCALES,
+  constellationAnchorTargets,
+  constellationIsActive,
+} from "../domain/constellations";
+import {
   clamp,
   pointerDistance,
   pointerMidpoint,
@@ -33,6 +38,12 @@ import {
   type CameraState,
   type ProjectedPoint,
 } from "../domain/projection";
+import {
+  createGravitySystem,
+  gravityTargetForNode,
+  relationshipAffinity,
+  type GravitySystem,
+} from "../domain/gravity";
 import { useReducedMotion } from "../hooks/useReducedMotion";
 import { useUniverseStore } from "../state/universeStore";
 import {
@@ -48,6 +59,9 @@ interface RuntimeBody {
   target: Vector3;
   projected: ProjectedPoint;
   renderScale: number;
+  trail: Array<{ position: Vector3; sampledAt: number }>;
+  lastTrailPosition: Vector3;
+  lastTrailSampledAt: number;
 }
 
 interface PointerRecord extends Point2 {
@@ -62,17 +76,6 @@ interface PinchState {
   panX: number;
   panY: number;
 }
-
-const LENS_ATTRACTORS: Record<LensId, Vector3> = {
-  red: { x: -900, y: -470, z: 260 },
-  orange: { x: -390, y: -890, z: -320 },
-  yellow: { x: 350, y: -900, z: 310 },
-  green: { x: 930, y: -420, z: -250 },
-  blue: { x: 930, y: 410, z: 280 },
-  indigo: { x: 350, y: 900, z: -310 },
-  violet: { x: -350, y: 900, z: 320 },
-  magenta: { x: -930, y: 390, z: -260 },
-};
 
 const RELATIONSHIPS = AUTHORED_BODIES.flatMap((node) =>
   node.relatedNodeIds
@@ -96,28 +99,6 @@ function lensColor(lensId: LensId): string {
   return LENSES.find((lens) => lens.id === lensId)?.color ?? "#171717";
 }
 
-function relationshipAffinity(
-  from: CelestialNode,
-  to: CelestialNode,
-): number {
-  let dot = 0;
-  let fromMagnitude = 0;
-  let toMagnitude = 0;
-
-  for (const lensId of LENS_IDS) {
-    const fromWeight = from.lensWeights[lensId];
-    const toWeight = to.lensWeights[lensId];
-    dot += fromWeight * toWeight;
-    fromMagnitude += fromWeight * fromWeight;
-    toMagnitude += toWeight * toWeight;
-  }
-
-  const similarity =
-    dot / (Math.sqrt(fromMagnitude) * Math.sqrt(toMagnitude) || 1);
-  const importance = (from.importance + to.importance) / 2;
-  return clamp(0.18 + similarity * 0.5 + importance * 0.32, 0, 1);
-}
-
 const INITIAL_CAMERA: CameraState = {
   yaw: -0.18,
   pitch: 0.1,
@@ -130,9 +111,8 @@ function copyVector(point: Vector3): Vector3 {
   return { x: point.x, y: point.y, z: point.z };
 }
 
-function targetForNode(
+function phaseTargetForNode(
   node: CelestialNode,
-  activeLensIds: readonly LensId[],
   gratitudePhase: GratitudePhase,
 ): Vector3 {
   if (
@@ -159,55 +139,11 @@ function targetForNode(
     };
   }
 
-  if (activeLensIds.length === 0) {
-    return copyVector(node.basePosition);
-  }
-
-  let totalWeight = 0;
-  const centroid = { x: 0, y: 0, z: 0 };
-  const selectionCenter = { x: 0, y: 0, z: 0 };
-  for (const lensId of activeLensIds) {
-    const weight = Math.max(0.04, node.lensWeights[lensId]);
-    const attractor = LENS_ATTRACTORS[lensId];
-    totalWeight += weight;
-    centroid.x += attractor.x * weight;
-    centroid.y += attractor.y * weight;
-    centroid.z += attractor.z * weight;
-    selectionCenter.x += attractor.x;
-    selectionCenter.y += attractor.y;
-    selectionCenter.z += attractor.z;
-  }
-
-  centroid.x /= totalWeight;
-  centroid.y /= totalWeight;
-  centroid.z /= totalWeight;
-  selectionCenter.x /= activeLensIds.length;
-  selectionCenter.y /= activeLensIds.length;
-  selectionCenter.z /= activeLensIds.length;
-
-  const relevance = lensRelevance(node, activeLensIds);
-  const baseInfluence =
-    node.tier === "ambient"
-      ? 0.78 - relevance * 0.18
-      : node.tier === "emerging"
-        ? 0.78 - relevance * 0.32
-        : 0.9 - relevance * 0.5;
-  const compositionSpread =
-    node.tier === "ambient" ? 0.66 : node.tier === "emerging" ? 1.08 : 1.8;
-  const breathingRoom = node.tier === "authored" ? 1.08 : 1;
-
-  return {
-    x:
-      node.basePosition.x * baseInfluence * breathingRoom +
-      (centroid.x - selectionCenter.x) * compositionSpread,
-    y:
-      node.basePosition.y * baseInfluence * breathingRoom +
-      (centroid.y - selectionCenter.y) * compositionSpread,
-    z:
-      node.basePosition.z * baseInfluence * breathingRoom +
-      (centroid.z - selectionCenter.z) * compositionSpread,
-  };
+  return copyVector(node.basePosition);
 }
+
+const HEALTHCARE_ANCHOR_TARGETS =
+  constellationAnchorTargets(HEALTHCARE_SCALES);
 
 function environmentPaths(glyphKey?: string) {
   switch (glyphKey) {
@@ -290,9 +226,18 @@ export function LivingMapScene({
   const nodeRefs = useRef(new Map<string, SVGGElement>());
   const nebulaRefs = useRef(new Map<string, SVGCircleElement>());
   const relationRefs = useRef(new Map<string, SVGPathElement>());
+  const trailRefs = useRef(new Map<string, SVGPathElement>());
+  const constellationPointRefs = useRef(new Map<string, SVGGElement>());
+  const constellationSegmentRefs = useRef(
+    new Map<string, SVGPathElement>(),
+  );
   const previewRef = useRef<HTMLButtonElement>(null);
   const camera = useRef<CameraState>({ ...INITIAL_CAMERA });
   const cameraTarget = useRef<CameraState>({ ...INITIAL_CAMERA });
+  const gravity = useRef<GravitySystem | null>(null);
+  if (!gravity.current) {
+    gravity.current = createGravitySystem(ALL_BODIES);
+  }
   const runtime = useRef(
     new Map<string, RuntimeBody>(
       ALL_BODIES.map((node) => [
@@ -309,6 +254,9 @@ export function LivingMapScene({
             visible: true,
           },
           renderScale: 1,
+          trail: [],
+          lastTrailPosition: copyVector(node.basePosition),
+          lastTrailSampledAt: 0,
         },
       ]),
     ),
@@ -318,9 +266,16 @@ export function LivingMapScene({
   const isDragging = useRef(false);
   const spacePressed = useRef(false);
   const lastInteractionAt = useRef(performance.now());
+  const previousGratitudePhase = useRef(gratitudePhase);
   const [size, setSize] = useState({ width: 1600, height: 1000 });
 
   const activeColor = mixLensColors(activeLensIds);
+  const healthcareConstellationActive = useMemo(
+    () =>
+      gratitudePhase === "idle" &&
+      constellationIsActive(HEALTHCARE_SCALES, activeLensIds),
+    [activeLensIds, gratitudePhase],
+  );
   const selectedNode = useMemo(
     () => ALL_BODIES.find((node) => node.id === selectedId) ?? null,
     [selectedId],
@@ -417,13 +372,53 @@ export function LivingMapScene({
   }, []);
 
   useEffect(() => {
+    const gravitySystem = gravity.current;
+    if (!gravitySystem) {
+      return;
+    }
+
+    if (
+      previousGratitudePhase.current !== "idle" &&
+      gratitudePhase === "idle"
+    ) {
+      gravitySystem.sync(
+        new Map(
+          [...runtime.current.entries()].map(([nodeId, body]) => [
+            nodeId,
+            body.position,
+          ]),
+        ),
+      );
+    }
+
     for (const node of ALL_BODIES) {
       const body = runtime.current.get(node.id);
       if (body) {
-        body.target = targetForNode(node, activeLensIds, gratitudePhase);
+        body.target =
+          gratitudePhase === "idle"
+            ? gravityTargetForNode(node, activeLensIds)
+            : phaseTargetForNode(node, gratitudePhase);
       }
     }
-  }, [activeLensIds, gratitudePhase]);
+    gravitySystem.setContext(
+      activeLensIds,
+      healthcareConstellationActive
+        ? HEALTHCARE_ANCHOR_TARGETS
+        : undefined,
+    );
+    previousGratitudePhase.current = gratitudePhase;
+  }, [
+    activeLensIds,
+    gratitudePhase,
+    healthcareConstellationActive,
+  ]);
+
+  useEffect(
+    () => () => {
+      gravity.current?.dispose();
+    },
+    [],
+  );
 
   useEffect(() => {
     if (centeredId) {
@@ -507,6 +502,10 @@ export function LivingMapScene({
           (cameraTarget.current.panY - camera.current.panY) * cameraEase,
       };
 
+      if (gratitudePhase === "idle" && !reducedMotion) {
+        gravity.current?.tick(delta);
+      }
+
       const centeredRuntime = centeredId
         ? runtime.current.get(centeredId)
         : undefined;
@@ -518,7 +517,14 @@ export function LivingMapScene({
         if (!body || !element) {
           continue;
         }
-        body.position = easeVector(body.position, body.target, easing);
+        if (gratitudePhase === "idle" && !reducedMotion) {
+          const gravityPosition = gravity.current?.position(node.id);
+          if (gravityPosition) {
+            body.position = gravityPosition;
+          }
+        } else {
+          body.position = easeVector(body.position, body.target, easing);
+        }
         const localPosition = {
           x: body.position.x - origin.x,
           y: body.position.y - origin.y,
@@ -574,6 +580,72 @@ export function LivingMapScene({
         element.style.opacity = String(clamp(visibleOpacity, 0, 1));
         element.style.setProperty("--depth", body.projected.depth.toFixed(2));
 
+        if (node.tier === "authored") {
+          const trail = trailRefs.current.get(node.id);
+          const moved = Math.hypot(
+            body.position.x - body.lastTrailPosition.x,
+            body.position.y - body.lastTrailPosition.y,
+            body.position.z - body.lastTrailPosition.z,
+          );
+          if (
+            !reducedMotion &&
+            moved > 3 &&
+            time - body.lastTrailSampledAt > 68
+          ) {
+            body.trail.push({
+              position: copyVector(body.position),
+              sampledAt: time,
+            });
+            body.trail = body.trail
+              .filter((sample) => time - sample.sampledAt < 920)
+              .slice(-7);
+            body.lastTrailPosition = copyVector(body.position);
+            body.lastTrailSampledAt = time;
+          } else {
+            body.trail = body.trail.filter(
+              (sample) => time - sample.sampledAt < 920,
+            );
+          }
+
+          if (trail) {
+            const projectedTrail = body.trail.map((sample) =>
+              projectVector(
+                {
+                  x: sample.position.x - origin.x,
+                  y: sample.position.y - origin.y,
+                  z: sample.position.z - origin.z,
+                },
+                camera.current,
+                size.width,
+                size.height,
+              ),
+            );
+            if (projectedTrail.length > 1) {
+              trail.setAttribute(
+                "d",
+                projectedTrail
+                  .map(
+                    (point, index) =>
+                      `${index === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`,
+                  )
+                  .join(""),
+              );
+              const oldest = body.trail[0];
+              trail.style.opacity = String(
+                oldest
+                  ? clamp(
+                      (1 - (time - oldest.sampledAt) / 920) * 0.5,
+                      0,
+                      0.5,
+                    )
+                  : 0,
+              );
+            } else {
+              trail.style.opacity = "0";
+            }
+          }
+        }
+
         const nebula = nebulaRefs.current.get(node.id);
         if (nebula) {
           const radius = clamp(
@@ -587,6 +659,55 @@ export function LivingMapScene({
           nebula.style.visibility = body.projected.visible
             ? "visible"
             : "hidden";
+        }
+      }
+
+      const constellationPositions = new Map<string, ProjectedPoint>();
+      if (healthcareConstellationActive) {
+        for (const constellationPoint of HEALTHCARE_SCALES.points) {
+          const anchoredPosition = constellationPoint.anchorNodeId
+            ? runtime.current.get(constellationPoint.anchorNodeId)?.position
+            : undefined;
+          const worldPosition = anchoredPosition ?? constellationPoint.position;
+          const projected = projectVector(
+            {
+              x: worldPosition.x - origin.x,
+              y: worldPosition.y - origin.y,
+              z: worldPosition.z - origin.z,
+            },
+            camera.current,
+            size.width,
+            size.height,
+          );
+          constellationPositions.set(constellationPoint.id, projected);
+
+          const helperPoint = constellationPointRefs.current.get(
+            constellationPoint.id,
+          );
+          if (helperPoint) {
+            helperPoint.setAttribute(
+              "transform",
+              `translate(${projected.x.toFixed(2)} ${projected.y.toFixed(2)}) scale(${projected.scale.toFixed(4)})`,
+            );
+            helperPoint.style.opacity = projected.visible
+              ? String(projected.opacity)
+              : "0";
+          }
+        }
+
+        for (const segment of HEALTHCARE_SCALES.segments) {
+          const path = constellationSegmentRefs.current.get(segment.id);
+          const from = constellationPositions.get(segment.from);
+          const to = constellationPositions.get(segment.to);
+          if (!path || !from || !to) {
+            continue;
+          }
+          path.setAttribute(
+            "d",
+            `M${from.x.toFixed(1)} ${from.y.toFixed(1)}L${to.x.toFixed(1)} ${to.y.toFixed(1)}`,
+          );
+          path.style.visibility =
+            from.visible && to.visible ? "visible" : "hidden";
         }
       }
 
@@ -775,6 +896,9 @@ export function LivingMapScene({
       className={`living-map mode-${mode} phase-${gratitudePhase}`}
       data-star-count={ALL_BODIES.length}
       data-authored-count={AUTHORED_BODIES.length}
+      data-healthcare-constellation={
+        healthcareConstellationActive ? "active" : "dormant"
+      }
     >
       <div className="sky-paper" aria-hidden="true" />
       <svg
@@ -852,7 +976,43 @@ export function LivingMapScene({
               ))}
             </linearGradient>
           ))}
+          <linearGradient
+            id="healthcare-constellation-gradient"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="100%"
+          >
+            <stop offset="0%" stopColor={lensColor("red")} />
+            <stop offset="46%" stopColor="#f7f2e8" />
+            <stop offset="54%" stopColor="#23201b" />
+            <stop offset="100%" stopColor={lensColor("green")} />
+          </linearGradient>
         </defs>
+
+        <g className="motion-trail-layer" aria-hidden="true">
+          {AUTHORED_BODIES.map((node) => (
+            <path
+              key={`trail-${node.id}`}
+              ref={(element) => {
+                if (element) {
+                  trailRefs.current.set(node.id, element);
+                } else {
+                  trailRefs.current.delete(node.id);
+                }
+              }}
+              className="motion-trail"
+              style={
+                {
+                  "--trail-color":
+                    activeLensIds.length > 0
+                      ? activeColor
+                      : lensColor(dominantLensId(node)),
+                } as CSSProperties
+              }
+            />
+          ))}
+        </g>
 
         <g className="nebula-layer" aria-hidden="true">
           {AUTHORED_BODIES.map((node) => {
@@ -926,6 +1086,53 @@ export function LivingMapScene({
               ))}
             </g>
           ))}
+        </g>
+
+        <g
+          className={`constellation-layer healthcare-scales${healthcareConstellationActive ? " is-visible" : ""}`}
+          aria-hidden="true"
+        >
+          <g className="constellation-lines">
+            {HEALTHCARE_SCALES.segments.map((segment) => (
+              <path
+                key={segment.id}
+                ref={(element) => {
+                  if (element) {
+                    constellationSegmentRefs.current.set(segment.id, element);
+                  } else {
+                    constellationSegmentRefs.current.delete(segment.id);
+                  }
+                }}
+                className="constellation-segment"
+              />
+            ))}
+          </g>
+          <g className="constellation-helpers">
+            {HEALTHCARE_SCALES.points
+              .filter((constellationPoint) => !constellationPoint.anchorNodeId)
+              .map((constellationPoint, index) => (
+                <g
+                  key={constellationPoint.id}
+                  ref={(element) => {
+                    if (element) {
+                      constellationPointRefs.current.set(
+                        constellationPoint.id,
+                        element,
+                      );
+                    } else {
+                      constellationPointRefs.current.delete(
+                        constellationPoint.id,
+                      );
+                    }
+                  }}
+                  className="constellation-helper"
+                  style={{ "--helper-delay": `${index * 55}ms` } as CSSProperties}
+                >
+                  <path d="M0-7L1.8-1.8L7 0L1.8 1.8L0 7L-1.8 1.8L-7 0L-1.8-1.8Z" />
+                  <circle r="1.25" />
+                </g>
+              ))}
+          </g>
         </g>
 
         <g className="mycelium-layer" aria-hidden="true">

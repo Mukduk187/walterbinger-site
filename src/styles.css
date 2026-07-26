@@ -390,8 +390,23 @@ a:focus-visible,
 }
 
 .nebula-layer,
-.relationship-layer {
+.relationship-layer,
+.motion-trail-layer,
+.constellation-layer {
   pointer-events: none;
+}
+
+.motion-trail {
+  fill: none;
+  stroke: var(--trail-color);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.1;
+  opacity: 0;
+  filter: drop-shadow(
+    0 0 2px color-mix(in srgb, var(--trail-color) 30%, transparent)
+  );
+  vector-effect: non-scaling-stroke;
 }
 
 .relationship-nebula {
@@ -439,6 +454,65 @@ a:focus-visible,
 .relationship-particle.is-visible {
   opacity: 0.78;
   filter: drop-shadow(0 0 2px currentColor);
+}
+
+.living-map[data-healthcare-constellation="active"] .relationship-layer {
+  opacity: 0.08;
+  transition: opacity 520ms ease;
+}
+
+.living-map[data-healthcare-constellation="active"] .nebula-layer {
+  opacity: 0.32;
+  transition: opacity 520ms ease;
+}
+
+.constellation-layer {
+  opacity: 0;
+  transition: opacity 720ms ease;
+}
+
+.constellation-layer.is-visible {
+  opacity: 1;
+}
+
+.constellation-segment {
+  fill: none;
+  stroke: url("#healthcare-constellation-gradient");
+  stroke-dasharray: 13 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+  opacity: 0.96;
+  filter:
+    drop-shadow(0 0 1.5px rgba(228, 59, 69, 0.38))
+    drop-shadow(0 0 2px rgba(63, 155, 101, 0.28));
+  vector-effect: non-scaling-stroke;
+  animation: constellation-current 9s linear infinite;
+}
+
+.constellation-helper {
+  color: var(--ink);
+  opacity: 0;
+  transition: opacity 360ms ease var(--helper-delay);
+}
+
+.constellation-layer.is-visible .constellation-helper {
+  opacity: 0.92;
+}
+
+.constellation-helper path {
+  fill: var(--paper);
+  stroke: url("#healthcare-constellation-gradient");
+  stroke-linejoin: round;
+  stroke-width: 1.45;
+  vector-effect: non-scaling-stroke;
+}
+
+.constellation-helper circle {
+  fill: var(--ink);
+  stroke: var(--paper);
+  stroke-width: 0.7;
+  vector-effect: non-scaling-stroke;
 }
 
 .artifact-orbit {
@@ -994,6 +1068,12 @@ a:focus-visible,
   }
 }
 
+@keyframes constellation-current {
+  to {
+    stroke-dashoffset: -90;
+  }
+}
+
 @keyframes portal-open {
   from {
     background-size: 4% 4%;
@@ -1097,5 +1177,13 @@ a:focus-visible,
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
+  }
+
+  .motion-trail {
+    display: none;
+  }
+
+  .constellation-segment {
+    stroke-dasharray: none;
   }
 }
