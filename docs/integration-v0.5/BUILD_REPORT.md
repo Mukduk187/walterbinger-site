@@ -36,6 +36,9 @@ The GitHub Pages workflow now:
 3. Writes the application to `homepage/universe/`.
 4. Publishes the approved homepage and living map as one artifact.
 
+The repository's Pages source is set to GitHub Actions. The older branch-based
+publisher is disabled so it cannot overwrite the built artifact after a push.
+
 ## Verification
 
 - 19 unit tests pass.
@@ -60,4 +63,3 @@ Screenshots:
   document-based and should not be presented as the finished tool.
 - Final authored blurbs, links, reviews, and photo satellites for most worlds.
 - A dedicated animation-polish pass after the remaining source art is curated.
-- Confirmation that the `www` TLS certificate includes `www.walterbinger.com`.
