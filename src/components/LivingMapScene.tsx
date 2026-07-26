@@ -20,9 +20,8 @@ import {
   type Vector3,
 } from "../domain/cosmology";
 import {
-  HEALTHCARE_SCALES,
   constellationAnchorTargets,
-  constellationIsActive,
+  selectConstellation,
 } from "../domain/constellations";
 import {
   clamp,
@@ -111,6 +110,25 @@ function copyVector(point: Vector3): Vector3 {
   return { x: point.x, y: point.y, z: point.z };
 }
 
+function constellationSegmentPath(
+  from: ProjectedPoint,
+  to: ProjectedPoint,
+  bend = 0,
+): string {
+  if (!bend) {
+    return `M${from.x.toFixed(1)} ${from.y.toFixed(1)}L${to.x.toFixed(1)} ${to.y.toFixed(1)}`;
+  }
+
+  const deltaX = to.x - from.x;
+  const deltaY = to.y - from.y;
+  const length = Math.hypot(deltaX, deltaY) || 1;
+  const midpointX = (from.x + to.x) / 2;
+  const midpointY = (from.y + to.y) / 2;
+  const controlX = midpointX - (deltaY / length) * length * bend;
+  const controlY = midpointY + (deltaX / length) * length * bend;
+  return `M${from.x.toFixed(1)} ${from.y.toFixed(1)}Q${controlX.toFixed(1)} ${controlY.toFixed(1)} ${to.x.toFixed(1)} ${to.y.toFixed(1)}`;
+}
+
 function phaseTargetForNode(
   node: CelestialNode,
   gratitudePhase: GratitudePhase,
@@ -141,9 +159,6 @@ function phaseTargetForNode(
 
   return copyVector(node.basePosition);
 }
-
-const HEALTHCARE_ANCHOR_TARGETS =
-  constellationAnchorTargets(HEALTHCARE_SCALES);
 
 function environmentPaths(glyphKey?: string) {
   switch (glyphKey) {
@@ -270,12 +285,22 @@ export function LivingMapScene({
   const [size, setSize] = useState({ width: 1600, height: 1000 });
 
   const activeColor = mixLensColors(activeLensIds);
-  const healthcareConstellationActive = useMemo(
+  const activeConstellation = useMemo(
     () =>
-      gratitudePhase === "idle" &&
-      constellationIsActive(HEALTHCARE_SCALES, activeLensIds),
+      gratitudePhase === "idle"
+        ? selectConstellation(activeLensIds)
+        : null,
     [activeLensIds, gratitudePhase],
   );
+  const activeConstellationAnchorTargets = useMemo(
+    () =>
+      activeConstellation
+        ? constellationAnchorTargets(activeConstellation)
+        : new Map<string, Vector3>(),
+    [activeConstellation],
+  );
+  const healthcareConstellationActive =
+    activeConstellation?.id === "healthcare-scales";
   const selectedNode = useMemo(
     () => ALL_BODIES.find((node) => node.id === selectedId) ?? null,
     [selectedId],
@@ -402,15 +427,14 @@ export function LivingMapScene({
     }
     gravitySystem.setContext(
       activeLensIds,
-      healthcareConstellationActive
-        ? HEALTHCARE_ANCHOR_TARGETS
-        : undefined,
+      activeConstellation ? activeConstellationAnchorTargets : undefined,
     );
     previousGratitudePhase.current = gratitudePhase;
   }, [
+    activeConstellation,
+    activeConstellationAnchorTargets,
     activeLensIds,
     gratitudePhase,
-    healthcareConstellationActive,
   ]);
 
   useEffect(
@@ -663,8 +687,8 @@ export function LivingMapScene({
       }
 
       const constellationPositions = new Map<string, ProjectedPoint>();
-      if (healthcareConstellationActive) {
-        for (const constellationPoint of HEALTHCARE_SCALES.points) {
+      if (activeConstellation) {
+        for (const constellationPoint of activeConstellation.points) {
           const anchoredPosition = constellationPoint.anchorNodeId
             ? runtime.current.get(constellationPoint.anchorNodeId)?.position
             : undefined;
@@ -695,7 +719,7 @@ export function LivingMapScene({
           }
         }
 
-        for (const segment of HEALTHCARE_SCALES.segments) {
+        for (const segment of activeConstellation.segments) {
           const path = constellationSegmentRefs.current.get(segment.id);
           const from = constellationPositions.get(segment.from);
           const to = constellationPositions.get(segment.to);
@@ -704,7 +728,7 @@ export function LivingMapScene({
           }
           path.setAttribute(
             "d",
-            `M${from.x.toFixed(1)} ${from.y.toFixed(1)}L${to.x.toFixed(1)} ${to.y.toFixed(1)}`,
+            constellationSegmentPath(from, to, segment.bend),
           );
           path.style.visibility =
             from.visible && to.visible ? "visible" : "hidden";
@@ -758,6 +782,7 @@ export function LivingMapScene({
     return () => cancelAnimationFrame(frame);
   }, [
     activeLensIds,
+    activeConstellation,
     autoSpin,
     centeredId,
     gratitudePhase,
@@ -899,6 +924,7 @@ export function LivingMapScene({
       data-healthcare-constellation={
         healthcareConstellationActive ? "active" : "dormant"
       }
+      data-active-constellation={activeConstellation?.id ?? "none"}
     >
       <div className="sky-paper" aria-hidden="true" />
       <svg
@@ -987,6 +1013,18 @@ export function LivingMapScene({
             <stop offset="46%" stopColor="#f7f2e8" />
             <stop offset="54%" stopColor="#23201b" />
             <stop offset="100%" stopColor={lensColor("green")} />
+          </linearGradient>
+          <linearGradient
+            id="tattoo-heart-constellation-gradient"
+            x1="12%"
+            y1="0%"
+            x2="88%"
+            y2="100%"
+          >
+            <stop offset="0%" stopColor="#23201b" />
+            <stop offset="36%" stopColor={lensColor("red")} />
+            <stop offset="64%" stopColor={lensColor("red")} />
+            <stop offset="100%" stopColor="#23201b" />
           </linearGradient>
         </defs>
 
@@ -1089,11 +1127,11 @@ export function LivingMapScene({
         </g>
 
         <g
-          className={`constellation-layer healthcare-scales${healthcareConstellationActive ? " is-visible" : ""}`}
+          className={`constellation-layer${activeConstellation ? ` ${activeConstellation.className} is-visible` : ""}`}
           aria-hidden="true"
         >
           <g className="constellation-lines">
-            {HEALTHCARE_SCALES.segments.map((segment) => (
+            {activeConstellation?.segments.map((segment) => (
               <path
                 key={segment.id}
                 ref={(element) => {
@@ -1104,11 +1142,14 @@ export function LivingMapScene({
                   }
                 }}
                 className="constellation-segment"
+                style={{
+                  "--constellation-stroke": `url(#${activeConstellation.gradientId})`,
+                } as CSSProperties}
               />
             ))}
           </g>
           <g className="constellation-helpers">
-            {HEALTHCARE_SCALES.points
+            {activeConstellation?.points
               .filter((constellationPoint) => !constellationPoint.anchorNodeId)
               .map((constellationPoint, index) => (
                 <g
@@ -1126,7 +1167,10 @@ export function LivingMapScene({
                     }
                   }}
                   className="constellation-helper"
-                  style={{ "--helper-delay": `${index * 55}ms` } as CSSProperties}
+                  style={{
+                    "--constellation-stroke": `url(#${activeConstellation.gradientId})`,
+                    "--helper-delay": `${index * 42}ms`,
+                  } as CSSProperties}
                 >
                   <path d="M0-7L1.8-1.8L7 0L1.8 1.8L0 7L-1.8 1.8L-7 0L-1.8-1.8Z" />
                   <circle r="1.25" />
@@ -1220,7 +1264,6 @@ export function LivingMapScene({
                   <EmergingGlyph index={index} />
                 ) : (
                   <>
-                    <circle className="body-aura" r="47" />
                     <BodyGlyph
                       node={node}
                       active={relevant}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "field-tools",
+  "slug": "field-tools",
+  "title": "PREP / PERP Field Tools",
+  "status": "seeded",
+  "sourceLocations": [
+    "Google Drive PREP / PERP documents",
+    "Reference Library approved field-card sources"
+  ],
+  "curationNotes": [
+    "Recover the approved laminated cards and interactive constellation board.",
+    "Do not infer missing product design from text-only documents."
+  ]
+}

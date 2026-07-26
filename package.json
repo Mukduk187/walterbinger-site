@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "serve:e2e": "node scripts/serve-homepage.mjs --port=8765",
     "check": "pnpm run test && pnpm run build"
   },
   "packageManager": "pnpm@11.9.0",

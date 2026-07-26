@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "listening-room",
+  "slug": "listening-room",
+  "title": "Listening Room",
+  "status": "intake",
+  "sourceLocations": [
+    "Audio archive",
+    "Writing library"
+  ],
+  "curationNotes": [
+    "Collect approved audio, transcripts, playlists, and communication work."
+  ]
+}

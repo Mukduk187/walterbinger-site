@@ -17,11 +17,19 @@ test("professional doorway opens the source-linked PREP world", async ({
   await page.goto("/");
 
   await expect(
-    page.getByRole("heading", { name: "Walter Binger", exact: true }),
+    page.getByRole("img", { name: "Walter Binger", exact: true }).first(),
   ).toBeVisible();
   await page
-    .getByRole("button", { name: "PREP / PERP Field Tools", exact: true })
-    .dispatchEvent("click");
+    .getByRole("link", { name: "A larger project is taking shape" })
+    .click();
+
+  await expect(page).toHaveURL(/\/universe\/#\/sky$/);
+  await page
+    .getByRole("button", {
+      name: "PREP / PERP Field Tools. Press Space to pin or Enter to explore.",
+      exact: true,
+    })
+    .dispatchEvent("dblclick");
 
   await expect(page).toHaveURL(/#\/world\/field-tools$/);
   await expect(
@@ -45,7 +53,7 @@ test("professional doorway opens the source-linked PREP world", async ({
 test("lenses redraw relationships and a world can be entered", async ({
   page,
 }) => {
-  await page.goto("/#/sky");
+  await page.goto("/universe/#/sky");
 
   await page
     .getByRole("button", {
@@ -78,7 +86,7 @@ test("lenses redraw relationships and a world can be entered", async ({
 test("the field-tools star opens its expandable world and returns to the sky", async ({
   page,
 }) => {
-  await page.goto("/#/sky");
+  await page.goto("/universe/#/sky");
 
   await page
     .getByRole("button", {
@@ -102,7 +110,7 @@ test("the field-tools star opens its expandable world and returns to the sky", a
 });
 
 test("all spectra converge into the Snow Globe", async ({ page }) => {
-  await page.goto("/#/sky");
+  await page.goto("/universe/#/sky");
 
   for (const lens of lenses) {
     await page

@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "maine",
+  "slug": "maine",
+  "title": "Maine",
+  "status": "intake",
+  "sourceLocations": [
+    "Reference Library/03_WALTER_ARTIFACTS/Maine_And_Places"
+  ],
+  "curationNotes": [
+    "Curate place, family, landscape, and memory media with explicit publication approval."
+  ]
+}

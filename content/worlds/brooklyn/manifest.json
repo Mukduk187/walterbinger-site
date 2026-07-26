@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "brooklyn",
+  "slug": "brooklyn",
+  "title": "Brooklyn / NYC",
+  "status": "intake",
+  "sourceLocations": [
+    "Reference Library/03_WALTER_ARTIFACTS/Empanadas_Son",
+    "Reference Library/03_WALTER_ARTIFACTS/Nimbus"
+  ],
+  "curationNotes": [
+    "Curate place-based photographs and projects; do not duplicate the full private archive."
+  ]
+}

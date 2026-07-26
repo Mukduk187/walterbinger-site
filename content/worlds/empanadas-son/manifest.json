@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "empanadas-son",
+  "slug": "empanadas-son",
+  "title": "Empanadas Son!",
+  "status": "seeded",
+  "sourceLocations": [
+    "public/assets/source/empanadas-son",
+    "Reference Library/03_WALTER_ARTIFACTS/Empanadas_Son",
+    "Reference Library/04_SCENES_AND_PROJECTS/Symbol_And_Tattoo_System/Empanadas_Son"
+  ],
+  "presentation": {
+    "status": "planned",
+    "destination": "presentations/",
+    "sourceMaterial": [
+      "menu art",
+      "store photographs",
+      "reviews and press",
+      "operating story",
+      "brand artifacts"
+    ]
+  },
+  "curationNotes": [
+    "Build the presentation from Walter's approved originals; do not generate replacement brand art."
+  ]
+}

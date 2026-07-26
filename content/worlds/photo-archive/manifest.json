@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "photo-archive",
+  "slug": "photo-archive",
+  "title": "Photo Archive",
+  "status": "intake",
+  "sourceLocations": [
+    "Photos library",
+    "Reference Library/03_WALTER_ARTIFACTS/Facebook_Export_Private",
+    "Dropbox photo archive"
+  ],
+  "collections": [
+    "Argentina",
+    "Travel",
+    "Brooklyn / NYC",
+    "Maine",
+    "Burning Man",
+    "Nimbus",
+    "Fire in Balance",
+    "Tables and workshop"
+  ],
+  "curationNotes": [
+    "Private source archives stay private until individual images are approved.",
+    "Capture date, location, people, rights, and related world IDs for every published image."
+  ]
+}

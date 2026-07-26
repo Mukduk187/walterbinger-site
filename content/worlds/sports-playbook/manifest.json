@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "sports-playbook",
+  "slug": "sports-playbook",
+  "title": "Sports Field / Playbook",
+  "status": "intake",
+  "sourceLocations": [
+    "Photo archive",
+    "Writing library"
+  ],
+  "curationNotes": [
+    "Start with the Africa soccer tournament and collaboration stories."
+  ]
+}

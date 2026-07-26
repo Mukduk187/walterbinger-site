@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "lanes": [
+    "media",
+    "writing",
+    "artifacts",
+    "presentations",
+    "links"
+  ],
+  "worlds": [
+    "professional-archive",
+    "brooklyn",
+    "maine",
+    "argentina",
+    "hospitality",
+    "healthcare",
+    "field-tools",
+    "thinking-in-4d",
+    "empanadas-son",
+    "library-writing",
+    "listening-room",
+    "photo-archive",
+    "sports-playbook"
+  ]
+}

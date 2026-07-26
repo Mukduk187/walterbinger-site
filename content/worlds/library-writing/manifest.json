@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "library-writing",
+  "slug": "library-writing",
+  "title": "Library / Writing",
+  "status": "seeded",
+  "sourceLocations": [
+    "Reference Library/07_TEXT_AND_WRITING/Essays_And_Thinkpieces",
+    "Google Drive authored documents"
+  ],
+  "curationNotes": [
+    "This is the single website intake point for essays, working notes, and published writing.",
+    "Keep working drafts separate from publication-ready editions."
+  ]
+}

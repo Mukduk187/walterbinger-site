@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "healthcare",
+  "slug": "healthcare",
+  "title": "Healthcare",
+  "status": "intake",
+  "sourceLocations": [
+    "Professional archive",
+    "PREP / PERP source documents"
+  ],
+  "curationNotes": [
+    "Use de-identified, publication-safe operational proof only."
+  ]
+}

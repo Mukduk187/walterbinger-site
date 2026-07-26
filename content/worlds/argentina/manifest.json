@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "argentina",
+  "slug": "argentina",
+  "title": "Argentina",
+  "status": "intake",
+  "sourceLocations": [
+    "Photos library",
+    "Facebook export",
+    "Dropbox archive"
+  ],
+  "curationNotes": [
+    "Start with travel, hospitality, and Circus RestoBar material.",
+    "Record dates, places, people, and consent before publication."
+  ]
+}

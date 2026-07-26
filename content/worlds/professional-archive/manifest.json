@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "cv-archive",
+  "slug": "professional-archive",
+  "title": "Professional Archive",
+  "status": "seeded",
+  "sourceLocations": [
+    "homepage/Walter-Binger-CV-2026.pdf",
+    "homepage/Walter-Binger-Operations-Resume.pdf",
+    "homepage/Walter-Binger-Implementation-Resume.pdf",
+    "homepage/Walter-Binger-CustomerSuccess-Resume.pdf"
+  ],
+  "curationNotes": [
+    "Keep the approved landing-page documents canonical.",
+    "Add case-study proof here without changing the professional doorway."
+  ]
+}

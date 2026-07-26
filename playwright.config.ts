@@ -11,9 +11,10 @@ export default defineConfig({
     trace: "off",
   },
   webServer: {
-    command: "npm run dev -- --port 8765",
+    command: "pnpm run build && pnpm run serve:e2e",
     url: "http://127.0.0.1:8765",
     reuseExistingServer: true,
+    timeout: 120_000,
   },
   projects: [
     {

@@ -296,15 +296,20 @@ a:focus-visible,
   cursor: pointer;
 }
 
+.celestial-body:focus-visible {
+  outline: none;
+}
+
+.celestial-body:focus-visible .body-glyph {
+  filter:
+    url("#paper-wobble")
+    drop-shadow(0 0 2px var(--magenta))
+    drop-shadow(0 0 6px color-mix(in srgb, var(--magenta) 34%, transparent));
+}
+
 .body-hit-target {
   fill: transparent;
   stroke: none;
-}
-
-.body-aura {
-  fill: none;
-  stroke: transparent;
-  stroke-width: 3;
 }
 
 .body-glyph {
@@ -358,13 +363,6 @@ a:focus-visible,
   stroke: var(--paper);
   stroke-width: 4px;
   text-anchor: middle;
-}
-
-.tier-authored.is-relevant .body-aura {
-  stroke: var(--relationship-color, currentColor);
-  stroke-dasharray: 3 9;
-  opacity: 0.4;
-  animation: orbit-dashes 7s linear infinite;
 }
 
 .tier-authored.is-hovered,
@@ -456,12 +454,12 @@ a:focus-visible,
   filter: drop-shadow(0 0 2px currentColor);
 }
 
-.living-map[data-healthcare-constellation="active"] .relationship-layer {
+.living-map:not([data-active-constellation="none"]) .relationship-layer {
   opacity: 0.08;
   transition: opacity 520ms ease;
 }
 
-.living-map[data-healthcare-constellation="active"] .nebula-layer {
+.living-map:not([data-active-constellation="none"]) .nebula-layer {
   opacity: 0.32;
   transition: opacity 520ms ease;
 }
@@ -477,7 +475,7 @@ a:focus-visible,
 
 .constellation-segment {
   fill: none;
-  stroke: url("#healthcare-constellation-gradient");
+  stroke: var(--constellation-stroke);
   stroke-dasharray: 13 4;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -502,7 +500,7 @@ a:focus-visible,
 
 .constellation-helper path {
   fill: var(--paper);
-  stroke: url("#healthcare-constellation-gradient");
+  stroke: var(--constellation-stroke);
   stroke-linejoin: round;
   stroke-width: 1.45;
   vector-effect: non-scaling-stroke;
@@ -513,6 +511,18 @@ a:focus-visible,
   stroke: var(--paper);
   stroke-width: 0.7;
   vector-effect: non-scaling-stroke;
+}
+
+.tattoo-heart .constellation-segment {
+  stroke-dasharray: 10 3;
+  stroke-width: 2.15;
+  filter:
+    drop-shadow(0 0 1.5px rgba(228, 59, 69, 0.42))
+    drop-shadow(0 0 2.5px rgba(35, 32, 27, 0.2));
+}
+
+.tattoo-heart .constellation-helper path {
+  filter: drop-shadow(0 0 1.5px rgba(228, 59, 69, 0.34));
 }
 
 .artifact-orbit {

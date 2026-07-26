@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "nodeId": "hospitality",
+  "slug": "hospitality",
+  "title": "Hospitality",
+  "status": "intake",
+  "sourceLocations": [
+    "Reference Library/03_WALTER_ARTIFACTS/Empanadas_Son",
+    "Professional archive"
+  ],
+  "curationNotes": [
+    "Collect operating stories, menus, spaces, reviews, and service artifacts."
+  ]
+}
